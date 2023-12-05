@@ -28,6 +28,7 @@ namespace Advanced_CSharp.API.Controllers
                 {
                     return BadRequest(ModelState);
                 }
+
                 AuthenticationLoginResponse loginResponse = await _authenticationService.ValidateUser(request);
                 return loginResponse.BaseResponse.Success ? Ok(loginResponse) : BadRequest(loginResponse.BaseResponse.Message);
 

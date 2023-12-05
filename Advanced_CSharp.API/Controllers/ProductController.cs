@@ -53,7 +53,7 @@ namespace Advanced_CSharp.API.Controllers
         }
 
         [Route("admin/add-product")]
-        [HttpGet]
+        [HttpPost]
         public async Task<IActionResult> AdminAddProduct([FromQuery] ProductCreateRequest request)
         {
             try
@@ -70,7 +70,7 @@ namespace Advanced_CSharp.API.Controllers
         }
 
         [Route("admin/update-product")]
-        [HttpGet]
+        [HttpPut]
         public async Task<IActionResult> AdminUpdateProduct([FromQuery] ProductUpdateRequest request)
         {
             try
@@ -87,7 +87,7 @@ namespace Advanced_CSharp.API.Controllers
         }
 
         [Route("admin/delete-product")]
-        [HttpGet]
+        [HttpDelete]
         public async Task<IActionResult> AdminDeleteProduct([FromQuery] ProductDeleteRequest request)
         {
             try

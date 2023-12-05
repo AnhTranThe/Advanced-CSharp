@@ -6,6 +6,7 @@ namespace Advanced_CSharp.Database.EF
 {
     public class AdvancedCSharpDbContext : DbContext
     {
+
         public AdvancedCSharpDbContext(DbContextOptions options) : base(options)
         {
 
@@ -19,7 +20,10 @@ namespace Advanced_CSharp.Database.EF
             _ = modelBuilder.Entity<OrderDetail>()
            .HasKey(e => new { e.OrderId, e.ProductId });
             base.OnModelCreating(modelBuilder);
+
         }
+
+
 
         public virtual Task<int> SaveChangesAsync(string username = "")
         {
@@ -40,9 +44,6 @@ namespace Advanced_CSharp.Database.EF
             }
             return base.SaveChangesAsync();
         }
-
-
-
         public DbSet<Cart>? Carts { get; set; }
         public DbSet<CartDetail>? CartDetails { get; set; }
         public DbSet<Order>? Orders { get; set; }

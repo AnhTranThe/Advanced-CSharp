@@ -1,8 +1,6 @@
 ﻿using Advanced_CSharp.Database.EF;
-using Advanced_CSharp.Database.Entities;
 using Advanced_CSharp.Service.Interfaces;
 using Advanced_CSharp.Service.Services;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace Advanced_CSharp.API
@@ -13,10 +11,17 @@ namespace Advanced_CSharp.API
 
         public static void ConfigureServiceManager(this IServiceCollection services)
         {
+            _ = services.AddHttpContextAccessor();
             _ = services.AddScoped<IUnitWork, UnitWork>();
             _ = services.AddScoped<IProductService, ProductService>();
             _ = services.AddScoped<IAuthenticationService, AuthenticationService>();
             _ = services.AddScoped<IApplicationService, ApplicationService>();
+            _ = services.AddScoped<IUserService, UserService>();
+            _ = services.AddScoped<IRoleService, RoleService>();
+            _ = services.AddScoped<IUserRoleService, UserRoleService>();
+            _ = services.AddScoped<IJwtService, JwtService>();
+
+
 
         }
 
@@ -41,14 +46,9 @@ namespace Advanced_CSharp.API
                     opts.UseSqlServer(connectionString));
         }
 
-        public static void ConfigureIdentity(this IServiceCollection services)
-        {
 
-            _ = services.AddIdentity<AppUser, AppRole>()
-        .AddEntityFrameworkStores<AdvancedCSharpDbContext>()
-        .AddDefaultTokenProviders();
 
-        }
+
 
 
     }

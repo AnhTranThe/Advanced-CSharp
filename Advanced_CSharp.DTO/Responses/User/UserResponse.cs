@@ -10,14 +10,17 @@ namespace Advanced_CSharp.DTO.Responses.User
         public string LastName { get; set; } = string.Empty;
         public string FullName { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
-        public bool IsActive { get; set; } = true;
         public EGender Gender { get; set; }
-        public DateTimeOffset Dob { get; set; }
+        public DateTimeOffset? Dob { get; set; }
         public string Address { get; set; } = string.Empty;
         public string PhoneNumber { get; set; } = string.Empty;
         public DateTimeOffset? CreatedAt { get; set; }
         public string? CreatedBy { get; set; }
-        public DateTimeOffset? UpdatedDate { get; set; }
+        public DateTimeOffset? UpdatedAt { get; set; }
         public string? UpdatedBy { get; set; }
+
+        public string PasswordHash { get; set; } = string.Empty;
+
+        public string? Token { get; set; }
     }
 }
