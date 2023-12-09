@@ -6,6 +6,8 @@ namespace Advanced_CSharp.Service.Interfaces
     {
 
         Task<string> GenerateToken(UserResponse userResponse);
-        Guid? ValidateToken(string token);
+
+        Guid? ValidateJwtToken(string token);
+
     }
 }

@@ -6,5 +6,9 @@ namespace Advanced_CSharp.Service.Interfaces
     public interface IRoleService
     {
         Task<RoleSearchResponse> SearchAsync(RoleSearchRequest request);
+
+
+
+        Task<RoleGetByIdResponse> GetByIdAsync(RoleGetByIdRequest request);
     }
 }

@@ -1,14 +1,14 @@
 ﻿using Advanced_CSharp.DTO.Requests.Authentication;
 using Advanced_CSharp.DTO.Responses.Authentication;
+using Advanced_CSharp.Service.Helper;
 using Advanced_CSharp.Service.Interfaces;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Advanced_CSharp.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+
     public class AuthenticationController : ControllerBase
     {
         private readonly IAuthenticationService _authenticationService;

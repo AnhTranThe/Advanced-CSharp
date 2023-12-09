@@ -342,16 +342,17 @@ namespace Advanced_CSharp.Service.Services
                 if (_context != null && _context.AppUsers != null)
                 {
 
-                    // Check if the product exists
+                    // Check if the user exists
                     AppUser? existedUser = await _context.AppUsers.FindAsync(request.UserId);
 
                     if (existedUser != null)
                     {
 
-                        // Update product information
+                        // Update user information
                         if (!string.IsNullOrEmpty(request.Token))
                         {
                             existedUser.Token = request.Token;
+                            response.Token = existedUser.Token;
                         }
 
                         // Save changes to the database
@@ -361,7 +362,7 @@ namespace Advanced_CSharp.Service.Services
                         _ = await _unitWork.CompleteAsync(_userName);
 
                         // Generate DTO for product information after update
-                        response.Token = existedUser.Token;
+
                         baseResponse.Success = true;
 
 

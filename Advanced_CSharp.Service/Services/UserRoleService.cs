@@ -5,6 +5,8 @@ using Advanced_CSharp.DTO.Requests.UserRole;
 using Advanced_CSharp.DTO.Responses.UserRole;
 using Advanced_CSharp.Service.Interfaces;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
+using System.Data;
 
 namespace Advanced_CSharp.Service.Services
 {
@@ -95,20 +97,27 @@ namespace Advanced_CSharp.Service.Services
 
             try
             {
-                if (_context != null && _context.AppUserRoles != null)
+                if (_context != null && _context.AppUserRoles != null && _context.AppRoles != null)
                 {
+                    AppUserRole? existedAppUserRole = await (
+                               from user in _context.AppUsers
+                               join userRole in _context.AppUserRoles on user.Id equals userRole.UserId
+                               join role in _context.AppRoles on userRole.RoleId equals role.Id
+                               where user.Id == request.UserId || role.Id == request.RoleId
+                               select userRole
+                           ).FirstOrDefaultAsync();
 
-                    AppUserRole? existedAppUserRole = await _context.AppUserRoles.FindAsync(request.UserId, request.RoleId);
                     if (existedAppUserRole != null)
                     {
 
                         baseResponse.Success = true;
                         response.userRoleResponse = new()
                         {
-                            UserId = request.UserId,
-                            RoleId = request.RoleId
+                            UserId = existedAppUserRole.UserId,
+                            RoleId = existedAppUserRole.RoleId,
 
                         };
+
 
                     }
                     else

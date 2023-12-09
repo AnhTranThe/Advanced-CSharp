@@ -63,5 +63,57 @@ namespace Advanced_CSharp.Service.Services
             return response;
 
         }
+
+
+        public async Task<RoleGetByIdResponse> GetByIdAsync(RoleGetByIdRequest request)
+        {
+
+            RoleGetByIdResponse response = new();
+            BaseResponse baseResponse = response.BaseResponse;
+            baseResponse.Success = false;
+
+            try
+            {
+                if (_context != null && _context.AppRoles != null)
+                {
+
+                    AppRole? existedRole = await _context.AppRoles.FindAsync(request.Id);
+                    if (existedRole != null)
+                    {
+
+                        baseResponse.Success = true;
+                        response.roleResponse = new()
+                        {
+                            RoleId = existedRole.Id,
+                            RoleName = existedRole.RoleName
+
+                        };
+
+                    }
+                    else
+                    {
+
+                        baseResponse.Message = "Entity not found.";
+
+
+                    }
+                }
+            }
+
+            catch (Exception ex)
+            {
+                // Handle exceptions, log, or rethrow
+
+                baseResponse.Message = $"An error occurred while check existed the entity: {ex.Message}";
+            }
+
+            return response;
+
+
+
+
+        }
+
+
     }
 }

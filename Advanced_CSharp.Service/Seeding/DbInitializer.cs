@@ -11,6 +11,7 @@ namespace Advanced_CSharp.Service.Seeding
 
         public static async Task Initialize(AdvancedCSharpDbContext context)
         {
+
             if (context != null)
             {
 
@@ -26,7 +27,7 @@ namespace Advanced_CSharp.Service.Seeding
 
 
 
-                if (context.AppUsers != null && context.AppUsers.Any(t => t.Id == new Guid(ConstSystem.AdminUserId)))
+                if (context.AppUsers != null && !context.AppUsers.Any())
                 {
 
                     string passAdminHash = BCrypt.Net.BCrypt.HashPassword("Admin@12345");
@@ -36,7 +37,7 @@ namespace Advanced_CSharp.Service.Seeding
                     {
                         new()
                         {
-                            Id = new Guid(ConstSystem.AdminRoleId),
+                            Id = new Guid(ConstSystem.AdminUserId),
                             FirstName = "Anh",
                             LastName="Trần Thế",
                             FullName = "Trần Thế Anh",
