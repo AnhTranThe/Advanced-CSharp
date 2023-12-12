@@ -25,8 +25,6 @@ namespace Advanced_CSharp.Service.Seeding
                     });
                 }
 
-
-
                 if (context.AppUsers != null && !context.AppUsers.Any())
                 {
 
@@ -69,7 +67,6 @@ namespace Advanced_CSharp.Service.Seeding
                     });
                 }
 
-
                 if (context.AppUserRoles != null && !context.AppUserRoles.Any())
                 {
                     List<AppUserRole> appUserRoleList = new();
@@ -84,6 +81,16 @@ namespace Advanced_CSharp.Service.Seeding
 
                     }
                     context.AppUserRoles.AddRange(appUserRoleList);
+                }
+
+                if (context.Carts != null && !context.Carts.Any())
+                {
+                    context.Carts.AddRange(new List<Cart>
+                    {
+                        new() { Id = Guid.NewGuid(), UserId = new Guid(ConstSystem.AdminUserId) },
+                        new() { Id = Guid.NewGuid(), UserId = new Guid(ConstSystem.TesterUserId) }
+                    });
+
                 }
 
                 _ = await context.SaveChangesAsync();
