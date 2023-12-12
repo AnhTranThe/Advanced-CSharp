@@ -1,5 +1,6 @@
 ﻿using Advanced_CSharp.Database.Commons;
 using Advanced_CSharp.Database.Constants;
+using Advanced_CSharp.Database.EF;
 using Advanced_CSharp.DTO.Requests.Authentication;
 using Advanced_CSharp.DTO.Requests.Role;
 using Advanced_CSharp.DTO.Requests.User;
@@ -21,9 +22,10 @@ namespace Advanced_CSharp.Service.Services
         private readonly IUserRoleService _userRoleService;
         private readonly IRoleService _roleService;
         private readonly IJwtService _jwtUtils;
+        private readonly AdvancedCSharpDbContext _context;
 
 
-        public AuthenticationService(IUserService userService, IJwtService jwtUtils, IUserRoleService userRoleService, IRoleService roleService)
+        public AuthenticationService(IUserService userService, IJwtService jwtUtils, IUserRoleService userRoleService, IRoleService roleService, AdvancedCSharpDbContext context)
         {
 
 
@@ -31,6 +33,7 @@ namespace Advanced_CSharp.Service.Services
             _jwtUtils = jwtUtils;
             _userRoleService = userRoleService;
             _roleService = roleService;
+            _context = context;
 
         }
 
@@ -43,72 +46,63 @@ namespace Advanced_CSharp.Service.Services
 
 
             // if didnt find out then continue logic 
-            try
+            using (Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction transaction = _context.Database.BeginTransaction())
             {
+                try
+                {
 
-                // check if existed user account in database 
-                UserSearchRequest userSearchRequest = new()
-                {
-                    UserName = Request.UserName,
-                    Email = Request.Email
-
-                };
-                UserSearchResponse userSearchResonse = await _userService.SearchAsync(userSearchRequest);
-                if (userSearchResonse != null)
-                {
-                    baseResponse.Message = "An account with this email already exists.";
-                    return response;
-                }
-                else
-                {
-                    if (Request.Password != Request.ComparePassword)
+                    // check if existed user account in database 
+                    UserSearchRequest userSearchRequest = new()
                     {
-
-                        baseResponse.Message = "Password and Confirmation Password must match.";
-                        return response;
-                    }
-                    // Create new Appuser instance
-                    UserCreateRequest userCreateRequest = new()
-                    {
-                        FirstName = Request.FirstName,
-                        LastName = Request.LastName,
-                        Email = Request.Email,
                         UserName = Request.UserName,
-                        PasswordHash = BCrypt.Net.BCrypt.HashPassword(Request.Password)
+                        Email = Request.Email
 
                     };
-                    UserCreateResponse userCreateResponse = await _userService.AddAsync(userCreateRequest);
-
-                    if (userCreateResponse == null)
+                    UserSearchResponse userSearchResonse = await _userService.SearchAsync(userSearchRequest);
+                    if (userSearchResonse.BaseResponse.Success)
                     {
-                        baseResponse.Message = "Register failed. Please check provided information.";
+                        baseResponse.Message = "An account with this email already exists.";
                         return response;
                     }
-
-                    RoleSearchRequest roleSearchRequest = new()
+                    else
                     {
-                        RoleName = ConstSystem.CustomerRole
-                    };
-                    RoleSearchResponse roleSearchResponse = await _roleService.SearchAsync(roleSearchRequest);
+                        if (Request.Password != Request.ComparePassword)
+                        {
+
+                            baseResponse.Message = "Password and Confirmation Password must match.";
+                            return response;
+                        }
+                        // Create new Appuser instance
+                        UserCreateRequest userCreateRequest = new()
+                        {
+                            FirstName = Request.FirstName,
+                            LastName = Request.LastName,
+                            Email = Request.Email,
+                            UserName = Request.UserName,
+                            PasswordHash = BCrypt.Net.BCrypt.HashPassword(Request.Password)
+
+                        };
+                        UserCreateResponse userCreateResponse = await _userService.AddAsync(userCreateRequest);
+
+                        if (userCreateResponse == null)
+                        {
+                            baseResponse.Message = "Register failed. Please check provided information.";
+                            return response;
+                        }
+
+                        RoleSearchRequest roleSearchRequest = new()
+                        {
+                            RoleName = ConstSystem.CustomerRole
+                        };
+                        RoleSearchResponse roleSearchResponse = await _roleService.SearchAsync(roleSearchRequest);
 
 
-                    if (roleSearchResponse == null)
-                    {
-                        baseResponse.Message = "There are no role customer";
-                        return response;
+                        if (!roleSearchResponse.BaseResponse.Success)
+                        {
+                            baseResponse.Message = "There are no role customer";
+                            return response;
 
-                    }
-
-                    UserRoleGetByIdRequest userRoleGetByIdRequest = new()
-                    {
-                        RoleId = roleSearchResponse.roleResponse.RoleId,
-                        UserId = userCreateResponse.UserResponse.Id
-
-                    };
-                    UserRoleGetByIdResponse userRoleGetByIdResponse = await _userRoleService.GetByIdAsync(userRoleGetByIdRequest);
-                    if (userRoleGetByIdResponse == null)
-
-                    {
+                        }
 
                         UserRoleCreateRequest userRoleCreateRequest = new()
                         {
@@ -132,34 +126,20 @@ namespace Advanced_CSharp.Service.Services
                         }
 
                     }
-                    else
-                    {
-                        baseResponse.Message = "There are have user role already";
-                    }
-
-
-
-
-
-
-
-
+                    transaction.Commit();
 
 
                 }
+                catch (Exception ex)
+                {
 
-
-
-
+                    transaction.Rollback();
+                    baseResponse.Message = "An error occurred during registration.";
+                    baseResponse.Errors.Add(ex.Message);
+                }
 
             }
-            catch (Exception ex)
-            {
 
-
-                baseResponse.Message = "An error occurred during registration.";
-                baseResponse.Errors.Add(ex.Message);
-            }
 
             return response;
         }

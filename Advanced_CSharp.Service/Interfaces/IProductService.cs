@@ -10,6 +10,9 @@ namespace Advanced_CSharp.Service.Interfaces
         Task<ProductCreateResponse> AddAsync(ProductCreateRequest request);
         Task<ProductUpdateResponse> UpdateAsync(ProductUpdateRequest request);
         Task<ProductDeleteResponse> DeleteAsync(ProductDeleteRequest request);
+        Task<ProductCheckResponse> CheckAsync(ProductCheckRequest request);
+        Task<ProductUpdateInventoryResponse> UpdateInventoryAsync(ProductUpdateInventoryRequest request);
+
 
 
 

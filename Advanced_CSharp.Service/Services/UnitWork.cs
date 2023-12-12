@@ -14,7 +14,17 @@ namespace Advanced_CSharp.Service.Services
         }
         public async Task<bool> CompleteAsync(string userName)
         {
-            return await _context.SaveChangesAsync(userName) > 0;
+            // Check if the provided userName is not null or empty
+            if (!string.IsNullOrEmpty(userName))
+            {
+                // Save changes with the provided userName for auditing
+                return await _context.SaveChangesAsync(userName) > 0;
+            }
+            else
+            {
+                // Save changes without specifying a userName
+                return await _context.SaveChangesAsync() > 0;
+            }
         }
     }
 }

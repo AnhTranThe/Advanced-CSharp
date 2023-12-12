@@ -9,5 +9,8 @@ namespace Advanced_CSharp.Service.Interfaces
 
         Task<UserRoleGetByIdResponse> GetByIdAsync(UserRoleGetByIdRequest request);
 
+        Task<UserRoleGetByIdResponse> GetByIdRegisterAsync(UserRoleGetByIdRequest request);
+
+
     }
 }

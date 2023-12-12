@@ -5,9 +5,10 @@ namespace Advanced_CSharp.Service.Interfaces
 {
     public interface IOrderDetailService
     {
-        Task<OrderDetailAddItemResponse> AddItemAsync(OrderDetailAddItemRequest request);
+        Task<OrderDetailAddItemResponse> AddItemAsync();
         Task<OrderDetailGetListResponse> GetItemsAllAsync(OrderDetailGetListRequest request);
         Task<OrderDetailGetByIdResponse> GetItemByIdAsync(OrderDetailGetByIdRequest request);
+
 
 
 

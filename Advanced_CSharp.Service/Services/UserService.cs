@@ -1,11 +1,11 @@
 ﻿using Advanced_CSharp.Database.Commons;
+using Advanced_CSharp.Database.Constants;
 using Advanced_CSharp.Database.EF;
 using Advanced_CSharp.Database.Entities;
 using Advanced_CSharp.Database.Enums;
 using Advanced_CSharp.DTO.Requests.User;
 using Advanced_CSharp.DTO.Responses.User;
 using Advanced_CSharp.Service.Interfaces;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
 namespace Advanced_CSharp.Service.Services
@@ -17,11 +17,11 @@ namespace Advanced_CSharp.Service.Services
         private readonly string _userName;
 
 
-        public UserService(AdvancedCSharpDbContext context, IUnitWork unitWork, IHttpContextAccessor httpContextAccessor)
+        public UserService(AdvancedCSharpDbContext context, IUnitWork unitWork)
         {
             _context = context;
             _unitWork = unitWork;
-            _userName = httpContextAccessor.HttpContext?.User?.Identity?.Name ?? "System";
+            _userName = string.IsNullOrEmpty(ConstSystem.loggedUserName) ? "System" : ConstSystem.loggedUserName;
 
 
         }
@@ -93,7 +93,7 @@ namespace Advanced_CSharp.Service.Services
                 if (_context != null && _context.AppUsers != null)
                 {
 
-                    AppUser? existedAppUser = await _context.AppUsers.SingleOrDefaultAsync(x => x.UserName == request.UserName || x.Email == request.Email);
+                    AppUser? existedAppUser = await _context.AppUsers.Where(x => x.UserName == request.UserName || x.Email == request.Email).FirstOrDefaultAsync();
 
                     if (existedAppUser != null)
                     {

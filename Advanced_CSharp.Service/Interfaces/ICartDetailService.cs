@@ -7,10 +7,9 @@ namespace Advanced_CSharp.Service.Interfaces
     {
 
         Task<CartDetailAddItemResponse> AddItemAsync(CartDetailAddItemRequest request);
-        Task<CartDetailGetListResponse> GetItemsAllAsync(CartDetailGetListRequest request);
-        Task<CartDetailGetItemByIdResponse> GetItemByIdAsync(CartDetailGetItemByIdRequest request);
-        Task<CartDetailUpdateItemResponse> UpdateItemAsync(CartDetailUpdateItemRequest request);
-        Task<CartDetailDeleteResponse> DeleteItemAsync(CartDetailDeleteItemRequest request);
+        Task<CartDetailGetItemListResponse> GetItemsAllAsync(CartDetailGetItemListRequest request);
+        Task<CartDetailUpdateItemQuantityResponse> UpdateItemQuantityAsync(CartDetailUpdateItemQuantityRequest request);
+        Task<CartDetailDeleteItemResponse> DeleteItemAsync(CartDetailDeleteItemRequest request);
 
 
     }
