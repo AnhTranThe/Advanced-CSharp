@@ -24,7 +24,10 @@ namespace Advanced_CSharp.API
             _ = services.AddScoped<IRoleService, RoleService>();
             _ = services.AddScoped<IUserRoleService, UserRoleService>();
             _ = services.AddScoped<IJwtService, JwtService>();
-
+            _ = services.AddScoped<ICartService, CartService>();
+            _ = services.AddScoped<ICartDetailService, CartDetailService>();
+            _ = services.AddScoped<IOrderService, OrderService>();
+            _ = services.AddScoped<IOrderDetailService, OrderDetailService>();
 
 
         }

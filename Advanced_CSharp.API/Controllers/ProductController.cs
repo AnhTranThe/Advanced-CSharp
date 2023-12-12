@@ -10,7 +10,6 @@ namespace Advanced_CSharp.API.Controllers
     [Route("api/[controller]")]
     [ApiController]
 
-
     public class ProductController : ControllerBase
     {
 
@@ -22,10 +21,10 @@ namespace Advanced_CSharp.API.Controllers
         }
 
         //http://localhost:port api/product/get-all-products
-        [Route("admin/get-all-products")]
+        [Route("get-all-products")]
         [HttpGet]
         [Authorize($"{ConstSystem.AdminRole},{ConstSystem.CustomerRole}")]
-        public async Task<IActionResult> AdminGetAllProducts([FromQuery] ProductGetListRequest request)
+        public async Task<IActionResult> GetAllProducts([FromQuery] ProductGetListRequest request)
         {
             try
             {
@@ -40,10 +39,10 @@ namespace Advanced_CSharp.API.Controllers
             }
         }
 
-        [Route("admin/get-product")]
+        [Route("get-product")]
         [HttpGet]
-        [Authorize(ConstSystem.AdminRole)]
-        public async Task<IActionResult> AdminGetProductById([FromQuery] ProductGetByIdRequest request)
+        [Authorize($"{ConstSystem.AdminRole},{ConstSystem.CustomerRole}")]
+        public async Task<IActionResult> GetProductById([FromQuery] ProductGetByIdRequest request)
         {
             try
             {
