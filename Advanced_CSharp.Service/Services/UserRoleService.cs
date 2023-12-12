@@ -106,7 +106,6 @@ namespace Advanced_CSharp.Service.Services
                                where user.Id == request.UserId || role.Id == request.RoleId
                                select userRole
                            ).FirstOrDefaultAsync();
-                    //AppUserRole? existedAppUserRole = await _context.AppUserRoles.FindAsync();
 
                     if (existedAppUserRole != null)
                     {
@@ -158,7 +157,7 @@ namespace Advanced_CSharp.Service.Services
                                where user.Id == request.UserId && role.Id == request.RoleId
                                select userRole
                            ).FirstOrDefaultAsync();
-                    //AppUserRole? existedAppUserRole = await _context.AppUserRoles.FindAsync();
+
 
                     if (existedAppUserRole != null)
                     {
