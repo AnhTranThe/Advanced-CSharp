@@ -11,6 +11,9 @@ namespace Advanced_CSharp.Database.Entities
         public Guid UserId { get; set; }
         public decimal Amount { get; set; } = 0;
         public EOrderStatus Status { get; set; }
+        public bool IsDeleted { get; set; } = false;
+
+        public List<OrderDetail>? OrderDetails { get; set; }
 
 
     }
