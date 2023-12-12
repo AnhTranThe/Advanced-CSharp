@@ -2,7 +2,8 @@
 {
     public class CartDetailDeleteItemRequest
     {
-        public Guid CartId { get; set; }
+        public Guid Id { get; set; }
         public Guid ProductId { get; set; }
+
     }
 }

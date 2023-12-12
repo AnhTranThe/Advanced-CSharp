@@ -2,7 +2,7 @@
 
 namespace Advanced_CSharp.DTO.Responses.CartDetail
 {
-    public class CartDetailUpdateItemResponse
+    public class CartDetailUpdateItemQuantityResponse
     {
         public BaseResponse BaseResponse { get; set; } = new BaseResponse();
         public CartDetailResponse oldCartDetailResponse { get; set; } = new CartDetailResponse();

@@ -13,5 +13,6 @@ namespace Advanced_CSharp.DTO.Responses.Order
         public DateTimeOffset? UpdatedAt { get; set; }
         public string? UpdatedBy { get; set; }
 
+
     }
 }

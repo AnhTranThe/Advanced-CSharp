@@ -5,6 +5,6 @@ namespace Advanced_CSharp.DTO.Responses.OrderDetail
     public class OrderDetailAddItemResponse
     {
         public BaseResponse BaseResponse { get; set; } = new BaseResponse();
-        public OrderDetailResponse orderDetailResponse { get; set; } = new OrderDetailResponse();
+        public List<OrderDetailResponse> orderDetailResponse { get; set; } = new List<OrderDetailResponse>();
     }
 }

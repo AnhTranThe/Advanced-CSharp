@@ -2,7 +2,7 @@
 {
     public class ProductUpdateRequest
     {
-        public Guid Id { get; set; }
+        public Guid Id { get; set; } = Guid.Empty;
         public string Name { get; set; } = string.Empty;
         public decimal Price { get; set; } = 0;
         public int Inventory { get; set; } = 0;

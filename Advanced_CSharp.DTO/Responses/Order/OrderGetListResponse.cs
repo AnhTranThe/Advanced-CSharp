@@ -1,8 +1,8 @@
 ﻿using Advanced_CSharp.Database.Commons;
 
-namespace Advanced_CSharp.DTO.Responses.CartDetail
+namespace Advanced_CSharp.DTO.Responses.Order
 {
-    public class CartDetailGetListResponse
+    public class OrderGetListResponse
     {
         public int PageSize { get; set; }
 
@@ -11,8 +11,10 @@ namespace Advanced_CSharp.DTO.Responses.CartDetail
         public double TotalProduct { get; set; }
 
         public int TotalPage { get; set; }
-        public decimal TotalAmount { get; set; }
+
         public BaseResponse BaseResponse { get; set; } = new BaseResponse();
-        public List<CartDetailResponse> cartDetailResponses { get; set; } = new List<CartDetailResponse>();
+
+        public List<OrderResponse> orderResponses { get; set; } = new List<OrderResponse>();
+
     }
 }

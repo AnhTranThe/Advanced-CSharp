@@ -2,6 +2,6 @@
 {
     public class OrderDetailGetByIdRequest
     {
-        public Guid OrderId { get; set; }
+        public Guid OrderId { get; set; } = Guid.Empty;
     }
 }

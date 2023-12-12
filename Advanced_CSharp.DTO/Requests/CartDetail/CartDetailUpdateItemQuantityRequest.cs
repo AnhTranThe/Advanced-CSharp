@@ -1,8 +1,11 @@
 ﻿namespace Advanced_CSharp.DTO.Requests.CartDetail
 {
-    public class CartDetailAddItemRequest
+    public class CartDetailUpdateItemQuantityRequest
     {
+
         public Guid ProductId { get; set; } = Guid.Empty;
-        public int Quantity { get; set; } = 0;
+        public int Quantity { get; set; }
+
+
     }
 }

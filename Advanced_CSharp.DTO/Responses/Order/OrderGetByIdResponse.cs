@@ -2,9 +2,10 @@
 
 namespace Advanced_CSharp.DTO.Responses.Order
 {
-    public class OrderCreateResponse
+    public class OrderGetByIdResponse
     {
         public BaseResponse BaseResponse { get; set; } = new BaseResponse();
-        public OrderResponse OrderResponse { get; set; } = new OrderResponse();
+
+        public OrderResponse orderResponse { get; set; } = new OrderResponse();
     }
 }
