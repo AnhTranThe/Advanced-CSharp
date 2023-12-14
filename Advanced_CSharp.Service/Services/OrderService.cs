@@ -183,10 +183,14 @@ namespace Advanced_CSharp.Service.Services
             {
                 if (_context != null && _context.Orders != null)
                 {
+                    if (request.UserId == Guid.Empty)
+                    {
+                        request.UserId = _userId;
+                    }
 
                     // Retrieve the order based on the provided criteria
                     Order? order = await _context.Orders
-                        .FirstOrDefaultAsync(o => o.Id == request.OrderId && o.UserId == _userId);
+                        .FirstOrDefaultAsync(o => o.Id == request.OrderId && o.UserId == request.UserId);
 
                     if (order != null)
                     {
@@ -230,17 +234,25 @@ namespace Advanced_CSharp.Service.Services
             BaseResponse baseResponse = response.BaseResponse;
             baseResponse.Success = false;
 
+
             try
             {
+
+
                 if (_context != null && _context.Orders != null)
                 {
+
+                    if (request.UserId == Guid.Empty)
+                    {
+                        request.UserId = _userId;
+                    }
 
 
                     // Build a query based on the provided criteria
                     IQueryable<Order> query = _context.Orders.AsQueryable();
 
 
-                    query = query.Where(o => o.UserId == _userId);
+                    query = query.Where(o => o.UserId == request.UserId);
 
 
                     // Add more criteria as needed...
@@ -297,8 +309,18 @@ namespace Advanced_CSharp.Service.Services
 
                     if (existingOrder != null)
                     {
-                        response.oldOrderStatus = existingOrder.Status;
-                        existingOrder.Status = request.Status;
+                        if (request.Status != Database.Enums.EOrderStatus.Pending)
+                        {
+                            response.oldOrderStatus = existingOrder.Status;
+                            existingOrder.Status = request.Status;
+                        }
+                        if (request.Amount != 0)
+                        {
+
+                            response.Amount = request.Amount;
+                            existingOrder.Amount = response.Amount;
+
+                        }
 
                         // Update the context and complete the unit of work
 

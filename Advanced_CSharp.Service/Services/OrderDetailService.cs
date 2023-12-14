@@ -25,10 +25,10 @@ namespace Advanced_CSharp.Service.Services
         private readonly Guid _userId;
         private readonly string _userName;
         public OrderDetailService(AdvancedCSharpDbContext context,
-            IUnitWork unitWork,
             IOrderService orderService,
             ICartService cartService,
-            IProductService productService
+            IProductService productService,
+            IUnitWork unitWork
           )
 
         {
@@ -109,10 +109,11 @@ namespace Advanced_CSharp.Service.Services
                             }
 
                             List<OrderDetailResponse> orderDetailResponses = new();
+                            decimal totalAmount = 0;
 
                             foreach (CartDetail cartDetail in cartDetails)
                             {
-
+                                decimal itemPrice = 0;
                                 // Retrieve the cart detail by its ID
 
                                 Product? productInCart = await _context.Products
@@ -144,9 +145,11 @@ namespace Advanced_CSharp.Service.Services
                                         Images = productInCart.Images,
 
                                     };
-
+                                    itemPrice = orderDetailResponse.CurrentPrice * orderDetailResponse.Quantity;
+                                    totalAmount += itemPrice;
 
                                     orderDetailResponses.Add(orderDetailResponse);
+
 
                                     ProductUpdateInventoryRequest productUpdateRequest = new()
                                     {
@@ -161,7 +164,6 @@ namespace Advanced_CSharp.Service.Services
                                         baseResponse.Message = "Cannot update inventory Product after add order";
                                         return response;
                                     }
-
                                     _ = await _unitWork.CompleteAsync(_userName);
 
                                     // Optionally, you may want to remove the cart detail after adding it to the order
@@ -170,6 +172,18 @@ namespace Advanced_CSharp.Service.Services
 
                                 }
 
+                            }
+
+                            OrderUpdateRequest orderUpdateRequest = new()
+                            {
+                                OrderId = orderGetByIdResponse.orderResponse.Id,
+                                Amount = totalAmount
+                            };
+                            OrderUpdateResponse orderUpdateResponse = await _orderService.UpdateAsync(orderUpdateRequest);
+                            if (!orderUpdateResponse.BaseResponse.Success)
+                            {
+                                baseResponse.Message = orderUpdateResponse.BaseResponse.Message;
+                                return response;
                             }
 
                             response.orderDetailResponse = orderDetailResponses;
@@ -201,6 +215,7 @@ namespace Advanced_CSharp.Service.Services
 
         }
 
+
         public async Task<OrderDetailGetByIdResponse> GetItemByIdAsync(OrderDetailGetByIdRequest request)
         {
             OrderDetailGetByIdResponse response = new();
@@ -209,24 +224,49 @@ namespace Advanced_CSharp.Service.Services
 
             try
             {
+
+
                 if (_context != null && _context.OrdersDetail != null)
                 {
+                    if (request.UserId == Guid.Empty)
+                    {
+                        request.UserId = _userId;
+                    }
                     // Assuming you have a method to retrieve the user's orders
                     OrderGetByIdRequest orderGetByIdRequest = new()
                     {
-                        OrderId = request.OrderId
+                        OrderId = request.OrderId,
+                        UserId = request.UserId
+
                     };
 
                     OrderGetByIdResponse orderGetByIdResponse = await _orderService.GetByIdAsync(orderGetByIdRequest);
 
                     if (orderGetByIdResponse.BaseResponse.Success)
                     {
+
                         // Retrieve all order details associated with the user's orders
                         List<OrderDetail> orderDetails = await _context.OrdersDetail
                             .Where(od => od.OrderId == request.OrderId)
                             .ToListAsync();
 
+
+
+                        OrderResponse orderResponse = new()
+                        {
+                            Id = orderGetByIdResponse.orderResponse.Id,
+                            UserId = orderGetByIdResponse.orderResponse.UserId,
+                            Amount = orderGetByIdResponse.orderResponse.Amount,
+                            Status = orderGetByIdResponse.orderResponse.Status,
+                            CreatedAt = orderGetByIdResponse.orderResponse.CreatedAt,
+                            CreatedBy = orderGetByIdResponse.orderResponse.CreatedBy,
+                            UpdatedAt = orderGetByIdResponse.orderResponse.UpdatedAt,
+                            UpdatedBy = orderGetByIdResponse.orderResponse.UpdatedBy
+                        };
+
                         List<OrderDetailResponse> orderDetailResponses = new();
+
+
 
                         foreach (OrderDetail orderDetail in orderDetails)
                         {
@@ -251,9 +291,10 @@ namespace Advanced_CSharp.Service.Services
                                 Category = productGetByIdResponse.productGetByIdResponse.Category
                             };
 
+
                             orderDetailResponses.Add(orderDetailResponse);
                         }
-
+                        response.orderResponse = orderResponse;
                         response.orderDetailResponses = orderDetailResponses;
                         baseResponse.Success = true;
                         baseResponse.Message = "Retrieve order details successfully.";
@@ -283,31 +324,36 @@ namespace Advanced_CSharp.Service.Services
             {
                 if (_context != null && _context.OrdersDetail != null && _context.Orders != null)
                 {
-
                     // Assuming you have a method to retrieve the user's orders
-                    OrderGetListRequest orderGetListRequest = new();
+                    if (request.UserId == Guid.Empty)
+                    {
+                        request.UserId = _userId;
+                    }
+                    OrderGetListRequest orderGetListRequest = new()
+                    {
 
-
+                        UserId = request.UserId
+                    };
                     OrderGetListResponse orderGetListResponse = await _orderService.GetAllAsync(orderGetListRequest);
 
                     if (orderGetListResponse.BaseResponse.Success)
                     {
+                        IQueryable<OrderDetail> query = (from orderDetail in _context.OrdersDetail
+                                                         join order in _context.Orders on orderDetail.OrderId equals order.Id
+                                                         where orderGetListResponse.orderResponses.Select(o => o.Id).Contains(order.Id)
+                                                         select orderDetail).AsQueryable();
 
+                        int totalItems = await query.CountAsync();
+                        int totalPages = (int)Math.Ceiling((double)totalItems / request.PageSize);
+                        int itemsToSkip = (request.PageIndex - 1) * request.PageSize;
 
                         // Retrieve all order details associated with the user's orders
-                        List<OrderDetail> orderDetails = await (
-                            from orderDetail in _context.OrdersDetail
-                            join order in _context.Orders on orderDetail.OrderId equals order.Id
-                            where orderGetListResponse.orderResponses.Select(o => o.Id).Contains(order.Id)
-                            select orderDetail
-                        ).ToListAsync();
-
-
+                        List<OrderDetail> orderDetails = await query.Skip(itemsToSkip).Take(request.PageSize).ToListAsync();
                         List<OrderDetailResponse> orderDetailResponses = new();
-
+                        decimal TotalAmount = 0;
                         foreach (OrderDetail orderDetail in orderDetails)
                         {
-
+                            decimal itemPrice = 0;
                             ProductGetByIdRequest productGetByIdRequest = new()
                             {
                                 Id = orderDetail.ProductId
@@ -328,10 +374,15 @@ namespace Advanced_CSharp.Service.Services
                                 Images = productGetByIdResponse.productGetByIdResponse.Images,
                                 Category = productGetByIdResponse.productGetByIdResponse.Category
                             };
-
+                            itemPrice = orderDetailResponse.CurrentPrice * orderDetailResponse.Quantity;
+                            TotalAmount += itemPrice;
                             orderDetailResponses.Add(orderDetailResponse);
-
                         }
+                        response.TotalAmount = TotalAmount;
+                        response.PageIndex = request.PageIndex;
+                        response.PageSize = request.PageSize;
+                        response.TotalPage = totalPages;
+                        response.TotalItems = totalItems;
                         response.orderDetailResponses = orderDetailResponses;
                         baseResponse.Success = true;
                         baseResponse.Message = "Retrieve order details successfully.";

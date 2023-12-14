@@ -10,7 +10,5 @@ namespace Advanced_CSharp.Service.Interfaces
         Task<OrderDetailGetByIdResponse> GetItemByIdAsync(OrderDetailGetByIdRequest request);
 
 
-
-
     }
 }

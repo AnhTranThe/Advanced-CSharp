@@ -12,11 +12,14 @@ namespace Advanced_CSharp.API.Controllers
 
     public class ProductController : ControllerBase
     {
+        private readonly IloggingService _loggingService;
 
         private readonly IProductService _productService;
-        public ProductController(IProductService productService)
+        public ProductController(IProductService productService, IloggingService loggingService)
         {
             _productService = productService;
+
+            _loggingService = loggingService;
 
         }
 
@@ -28,13 +31,15 @@ namespace Advanced_CSharp.API.Controllers
         {
             try
             {
+
                 ProductGetListResponse response = await _productService.GetAllAsync(request);
+
                 return response.BaseResponse.Success ? new JsonResult(response) : BadRequest(response.BaseResponse.Message);
 
             }
             catch (Exception ex)
             {
-
+                _loggingService.LogError(ex);
                 return StatusCode(500, ex.Message);
             }
         }
@@ -52,7 +57,7 @@ namespace Advanced_CSharp.API.Controllers
             }
             catch (Exception ex)
             {
-
+                _loggingService.LogError(ex);
                 return StatusCode(500, ex.Message);
             }
         }
@@ -70,7 +75,7 @@ namespace Advanced_CSharp.API.Controllers
             }
             catch (Exception ex)
             {
-
+                _loggingService.LogError(ex);
                 return StatusCode(500, ex.Message);
             }
         }
@@ -88,7 +93,7 @@ namespace Advanced_CSharp.API.Controllers
             }
             catch (Exception ex)
             {
-
+                _loggingService.LogError(ex);
                 return StatusCode(500, ex.Message);
             }
         }
@@ -106,7 +111,7 @@ namespace Advanced_CSharp.API.Controllers
             }
             catch (Exception ex)
             {
-
+                _loggingService.LogError(ex);
                 return StatusCode(500, ex.Message);
             }
         }

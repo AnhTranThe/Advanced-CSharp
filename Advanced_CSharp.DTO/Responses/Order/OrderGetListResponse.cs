@@ -8,7 +8,7 @@ namespace Advanced_CSharp.DTO.Responses.Order
 
         public int PageIndex { get; set; }
 
-        public double TotalProduct { get; set; }
+        public double TotalItems { get; set; }
 
         public int TotalPage { get; set; }
 

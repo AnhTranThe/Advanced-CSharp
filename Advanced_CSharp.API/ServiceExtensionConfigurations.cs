@@ -1,6 +1,8 @@
 ﻿using Advanced_CSharp.Database.EF;
 using Advanced_CSharp.Service.Interfaces;
 using Advanced_CSharp.Service.Services;
+using log4net;
+using log4net.Config;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -28,8 +30,14 @@ namespace Advanced_CSharp.API
             _ = services.AddScoped<ICartDetailService, CartDetailService>();
             _ = services.AddScoped<IOrderService, OrderService>();
             _ = services.AddScoped<IOrderDetailService, OrderDetailService>();
+            _ = services.AddScoped<IloggingService, LoggingService>();
 
+        }
 
+        public static void AddLog4net(this IServiceCollection services)
+        {
+            _ = XmlConfigurator.Configure(new FileInfo("log4net.config"));
+            _ = services.AddSingleton(LogManager.GetLogger(typeof(Program)));
         }
 
         public static void ConfigureCors(this IServiceCollection services)

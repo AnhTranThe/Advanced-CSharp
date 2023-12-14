@@ -8,5 +8,6 @@ namespace Advanced_CSharp.DTO.Requests.OrderDetail
         public Guid OrderId { get; set; } = Guid.Empty;
         public new int PageSize { get; set; } = 10;
         public new int PageIndex { get; set; } = 1;
+        public Guid UserId { get; set; }
     }
 }

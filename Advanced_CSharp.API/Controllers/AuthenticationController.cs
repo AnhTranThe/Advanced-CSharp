@@ -12,10 +12,11 @@ namespace Advanced_CSharp.API.Controllers
     public class AuthenticationController : ControllerBase
     {
         private readonly IAuthenticationService _authenticationService;
-        public AuthenticationController(IAuthenticationService authenticationService)
+        private readonly IloggingService _loggingService;
+        public AuthenticationController(IAuthenticationService authenticationService, IloggingService loggingService)
         {
             _authenticationService = authenticationService;
-
+            _loggingService = loggingService;
         }
         [HttpPost("authenticate")]
         [AllowAnonymous]
@@ -35,7 +36,7 @@ namespace Advanced_CSharp.API.Controllers
             }
             catch (Exception ex)
             {
-
+                _loggingService.LogError(ex);
                 return StatusCode(500, ex.Message);
 
             }
@@ -58,7 +59,7 @@ namespace Advanced_CSharp.API.Controllers
             }
             catch (Exception ex)
             {
-
+                _loggingService.LogError(ex);
                 return StatusCode(500, ex.Message);
             }
 

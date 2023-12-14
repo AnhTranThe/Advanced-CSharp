@@ -197,10 +197,14 @@ namespace Advanced_CSharp.Service.Services
 
                 if (_context != null && _context.CartDetails != null)
                 {
+                    if (request.UserId == Guid.Empty)
+                    {
+                        request.UserId = _userId;
+                    }
 
                     CartGetByIdRequest cartGetByIdRequest = new()
                     {
-                        UserId = _userId
+                        UserId = request.UserId
                     };
                     CartGetByIdResponse cartGetByIdResponse = await _cartService.GetByIdAsync(cartGetByIdRequest);
                     if (!cartGetByIdResponse.BaseResponse.Success)
@@ -208,19 +212,28 @@ namespace Advanced_CSharp.Service.Services
                         baseResponse.Message = "Failed to get list items in cart.";
                         return response;
                     }
+                    IQueryable<CartDetail> query = _context.CartDetails
+                                                .Where(cd => cd.CartId == cartGetByIdResponse.CartResponse.Id)
+                                                .OrderByDescending(e => e.Id).AsQueryable();
 
+                    int totalItems = await query.CountAsync();
 
+                    int totalPages = (int)Math.Ceiling((double)totalItems / request.PageSize);
 
+                    // Calculate the number of items to skip based on the page number and page size
+                    int itemsToSkip = (request.PageIndex - 1) * request.PageSize;
 
                     // Retrieve all cart details for the specified cart
-                    List<CartDetail> cartDetails = await _context.CartDetails
-                        .Where(cd => cd.CartId == cartGetByIdResponse.CartResponse.Id)
-                        .ToListAsync();
+                    List<CartDetail> cartDetails = await query
+                                                        .Skip(itemsToSkip)
+                                                        .Take(request.PageSize)
+                                                        .ToListAsync();
 
                     if (cartDetails != null && cartDetails.Any())
                     {
                         // Create a list to store DTOs representing cart details
                         List<CartDetailResponse> cartDetailResponses = new();
+                        decimal TotalAmount = 0;
 
                         // Convert each CartDetail to a DTO
                         foreach (CartDetail cartDetail in cartDetails)
@@ -241,7 +254,7 @@ namespace Advanced_CSharp.Service.Services
                                 CartId = cartDetail.CartId,
                                 ProductId = cartDetail.ProductId,
                                 Quantity = cartDetail.Quantity,
-                                UserId = _userId, // Ensure _userId is properly initialized
+                                UserId = request.UserId, // Ensure _userId is properly initialized
                                 Name = productGetByIdResponse.productGetByIdResponse.Name,
                                 Price = productGetByIdResponse.productGetByIdResponse.Price,
                                 Unit = productGetByIdResponse.productGetByIdResponse.Unit,
@@ -249,12 +262,18 @@ namespace Advanced_CSharp.Service.Services
                                 Category = productGetByIdResponse.productGetByIdResponse.Category
                             };
 
+                            decimal itemPrice = cartDetailResponse.Price * cartDetailResponse.Quantity;
+                            TotalAmount += itemPrice;
                             cartDetailResponses.Add(cartDetailResponse);
+
+
                         }
 
                         // Set the list of DTOs in the response
+                        response.TotalAmount = TotalAmount;
                         response.cartDetailResponses = cartDetailResponses;
-
+                        response.TotalItems = totalItems;
+                        response.TotalPage = totalPages;
                         baseResponse.Success = true;
                         baseResponse.Message = "Retrieve cart details successfully";
                     }

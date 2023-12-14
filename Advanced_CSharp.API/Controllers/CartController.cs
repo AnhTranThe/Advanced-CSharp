@@ -14,11 +14,14 @@ namespace Advanced_CSharp.API.Controllers
     {
 
         private readonly ICartDetailService _cartDetailService;
-        public CartController(ICartDetailService cartDetailService)
+        private readonly IloggingService _loggingService;
+
+        public CartController(ICartDetailService cartDetailService, IloggingService loggingService)
         {
 
 
             _cartDetailService = cartDetailService ?? throw new ArgumentNullException(nameof(cartDetailService));
+            _loggingService = loggingService;
         }
 
 
@@ -46,7 +49,7 @@ namespace Advanced_CSharp.API.Controllers
             }
             catch (Exception ex)
             {
-
+                _loggingService.LogError(ex);
                 return StatusCode(500, ex.Message);
             }
         }
@@ -68,7 +71,7 @@ namespace Advanced_CSharp.API.Controllers
             }
             catch (Exception ex)
             {
-
+                _loggingService.LogError(ex);
                 return StatusCode(500, ex.Message);
             }
         }
@@ -96,7 +99,7 @@ namespace Advanced_CSharp.API.Controllers
             }
             catch (Exception ex)
             {
-
+                _loggingService.LogError(ex);
                 return StatusCode(500, ex.Message);
             }
         }
@@ -123,7 +126,7 @@ namespace Advanced_CSharp.API.Controllers
             }
             catch (Exception ex)
             {
-
+                _loggingService.LogError(ex);
                 return StatusCode(500, ex.Message);
             }
         }

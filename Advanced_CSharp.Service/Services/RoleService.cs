@@ -76,7 +76,6 @@ namespace Advanced_CSharp.Service.Services
             {
                 if (_context != null && _context.AppRoles != null)
                 {
-
                     AppRole? existedRole = await _context.AppRoles.FindAsync(request.Id);
                     if (existedRole != null)
                     {

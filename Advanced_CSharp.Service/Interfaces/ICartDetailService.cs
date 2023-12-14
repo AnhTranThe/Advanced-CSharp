@@ -12,5 +12,8 @@ namespace Advanced_CSharp.Service.Interfaces
         Task<CartDetailDeleteItemResponse> DeleteItemAsync(CartDetailDeleteItemRequest request);
 
 
+
+
+
     }
 }

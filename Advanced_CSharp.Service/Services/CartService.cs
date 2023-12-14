@@ -127,7 +127,11 @@ namespace Advanced_CSharp.Service.Services
             CartGetByIdResponse response = new();
             BaseResponse baseResponse = response.BaseResponse;
             baseResponse.Success = false;
-            request.UserId = _userId;
+            if (request.UserId == Guid.Empty)
+            {
+                request.UserId = _userId;
+            }
+
             try
             {
                 if (_context != null && _context.Carts != null)

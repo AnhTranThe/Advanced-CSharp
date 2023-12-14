@@ -12,11 +12,13 @@ namespace Advanced_CSharp.API.Controllers
     public class OrderController : ControllerBase
     {
         private readonly IOrderDetailService _orderDetailService;
+        private readonly IloggingService _loggingService;
 
-        public OrderController(IOrderDetailService orderDetailService)
+        public OrderController(IOrderDetailService orderDetailService, IloggingService loggingService)
         {
 
             _orderDetailService = orderDetailService ?? throw new ArgumentNullException(nameof(orderDetailService));
+            _loggingService = loggingService;
         }
 
 
@@ -36,7 +38,7 @@ namespace Advanced_CSharp.API.Controllers
             }
             catch (Exception ex)
             {
-
+                _loggingService.LogError(ex);
                 return StatusCode(500, ex.Message);
             }
         }
@@ -59,7 +61,7 @@ namespace Advanced_CSharp.API.Controllers
             }
             catch (Exception ex)
             {
-
+                _loggingService.LogError(ex);
                 return StatusCode(500, ex.Message);
             }
         }
@@ -82,7 +84,7 @@ namespace Advanced_CSharp.API.Controllers
             }
             catch (Exception ex)
             {
-
+                _loggingService.LogError(ex);
                 return StatusCode(500, ex.Message);
             }
         }
