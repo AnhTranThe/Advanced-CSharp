@@ -14,7 +14,10 @@ namespace Advanced_CSharp.API
     public static class ServiceExtensionConfigurations
     {
 
-
+        /// <summary>
+        /// ConfigureServiceManager
+        /// </summary>
+        /// <param name="services"></param>
         public static void ConfigureServiceManager(this IServiceCollection services)
         {
             _ = services.AddHttpContextAccessor();
@@ -33,13 +36,19 @@ namespace Advanced_CSharp.API
             _ = services.AddScoped<IloggingService, LoggingService>();
 
         }
-
+        /// <summary>
+        /// AddLog4net
+        /// </summary>
+        /// <param name="services"></param>
         public static void AddLog4net(this IServiceCollection services)
         {
             _ = XmlConfigurator.Configure(new FileInfo("log4net.config"));
             _ = services.AddSingleton(LogManager.GetLogger(typeof(Program)));
         }
-
+        /// <summary>
+        /// ConfigureCors
+        /// </summary>
+        /// <param name="services"></param>
         public static void ConfigureCors(this IServiceCollection services)
         {
             _ = services.AddCors(options =>
@@ -51,7 +60,11 @@ namespace Advanced_CSharp.API
 
                     });
         }
-
+        /// <summary>
+        /// ConfigureSqlContext
+        /// </summary>
+        /// <param name="services"></param>
+        /// <param name="configuration"></param>
         public static void ConfigureSqlContext(this IServiceCollection services, IConfiguration configuration)
         {
 
@@ -60,6 +73,11 @@ namespace Advanced_CSharp.API
             _ = services.AddDbContext<AdvancedCSharpDbContext>(opts =>
                     opts.UseSqlServer(connectionString));
         }
+        /// <summary>
+        /// ConfigureAuthentication
+        /// </summary>
+        /// <param name="services"></param>
+        /// <param name="configuration"></param>
 
         public static void ConfigureAuthentication(this IServiceCollection services, IConfiguration configuration)
         {
@@ -88,7 +106,10 @@ namespace Advanced_CSharp.API
         }
 
 
-
+        /// <summary>
+        /// ConfigureAddSwagger
+        /// </summary>
+        /// <param name="services"></param>
         public static void ConfigureAddSwagger(this IServiceCollection services)
         {
             _ = services.AddSwaggerGen(opt =>

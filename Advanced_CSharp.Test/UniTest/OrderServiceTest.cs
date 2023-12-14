@@ -10,12 +10,20 @@ namespace Advanced_CSharp.Test.UniTest
     public class OrderServiceTest
     {
 
-
+        /// <summary>
+        /// OrderServiceTest
+        /// </summary>
         private readonly IOrderService _orderService;
         public OrderServiceTest()
         {
             _orderService = DomainServiceCollectionExtensions.SetupOrderService();
         }
+
+
+        /// <summary>
+        /// GetAllOrdersFromUserTestAsync happy case request
+        /// </summary>
+        /// <returns></returns>
 
 
         [TestMethod]
@@ -31,7 +39,10 @@ namespace Advanced_CSharp.Test.UniTest
         }
 
 
-
+        /// <summary>
+        /// GetOrderFromUserIdTestAsync happy case request
+        /// </summary>
+        /// <returns></returns>
         [TestMethod]
         public async Task GetOrderFromUserIdTestAsync()
         {

@@ -7,11 +7,21 @@ namespace Advanced_CSharp.Service.Services
     {
 
         private readonly AdvancedCSharpDbContext _context;
+        /// <summary>
+        /// UnitWork
+        /// </summary>
+        /// <param name="context"></param>
         public UnitWork(AdvancedCSharpDbContext context)
         {
 
             _context = context;
         }
+
+        /// <summary>
+        /// CompleteAsync
+        /// </summary>
+        /// <param name="userName"></param>
+        /// <returns></returns>
         public async Task<bool> CompleteAsync(string userName)
         {
             // Check if the provided userName is not null or empty

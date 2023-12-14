@@ -15,6 +15,11 @@ namespace Advanced_CSharp.Service.Services
         private readonly IUnitWork _unitWork;
         private readonly Guid _userId;
         private readonly string _userName;
+        /// <summary>
+        /// OrderService
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="unitWork"></param>
         public OrderService(AdvancedCSharpDbContext context, IUnitWork unitWork)
         {
             _context = context;
@@ -23,6 +28,11 @@ namespace Advanced_CSharp.Service.Services
             _userName = ConstSystem.loggedUserName;
 
         }
+        /// <summary>
+        /// CheckAsync
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         public async Task<OrderCheckResponse> CheckAsync(OrderCheckRequest request)
         {
             OrderCheckResponse response = new();
@@ -68,7 +78,11 @@ namespace Advanced_CSharp.Service.Services
             return response;
 
         }
-
+        /// <summary>
+        /// CreateAsync
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         public async Task<OrderCreateResponse> CreateAsync(OrderCreateRequest request)
         {
             OrderCreateResponse response = new();
@@ -120,7 +134,11 @@ namespace Advanced_CSharp.Service.Services
 
             return response;
         }
-
+        /// <summary>
+        /// DeleteAsync
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         public async Task<OrderDeleteResponse> DeleteAsync(OrderDeleteRequest request)
         {
             OrderDeleteResponse response = new();
@@ -172,7 +190,11 @@ namespace Advanced_CSharp.Service.Services
 
             return response;
         }
-
+        /// <summary>
+        /// GetByIdAsync
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         public async Task<OrderGetByIdResponse> GetByIdAsync(OrderGetByIdRequest request)
         {
             OrderGetByIdResponse response = new();
@@ -227,7 +249,11 @@ namespace Advanced_CSharp.Service.Services
 
             return response;
         }
-
+        /// <summary>
+        /// GetAllAsync
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         public async Task<OrderGetListResponse> GetAllAsync(OrderGetListRequest request)
         {
             OrderGetListResponse response = new();
@@ -291,7 +317,11 @@ namespace Advanced_CSharp.Service.Services
 
             return response;
         }
-
+        /// <summary>
+        /// UpdateAsync
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         public async Task<OrderUpdateResponse> UpdateAsync(OrderUpdateRequest request)
         {
             OrderUpdateResponse response = new();

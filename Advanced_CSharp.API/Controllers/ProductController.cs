@@ -15,6 +15,11 @@ namespace Advanced_CSharp.API.Controllers
         private readonly IloggingService _loggingService;
 
         private readonly IProductService _productService;
+        /// <summary>
+        /// ProductController
+        /// </summary>
+        /// <param name="productService"></param>
+        /// <param name="loggingService"></param>
         public ProductController(IProductService productService, IloggingService loggingService)
         {
             _productService = productService;
@@ -22,8 +27,12 @@ namespace Advanced_CSharp.API.Controllers
             _loggingService = loggingService;
 
         }
+        /// <summary>
+        /// GetAllProducts
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
 
-        //http://localhost:port api/product/get-all-products
         [Route("get-all-products")]
         [HttpGet]
         [Authorize($"{ConstSystem.AdminRole},{ConstSystem.CustomerRole}")]
@@ -44,7 +53,12 @@ namespace Advanced_CSharp.API.Controllers
             }
         }
 
-        [Route("get-product")]
+        /// <summary>
+        /// GetProductById
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("get-product-by-id")]
         [HttpGet]
         [Authorize($"{ConstSystem.AdminRole},{ConstSystem.CustomerRole}")]
         public async Task<IActionResult> GetProductById([FromQuery] ProductGetByIdRequest request)
@@ -61,8 +75,13 @@ namespace Advanced_CSharp.API.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
+        /// <summary>
+        /// AdminAddProduct
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
 
-        [Route("admin/add-product")]
+        [Route("admin/add-new-product")]
         [HttpPost]
         [Authorize(ConstSystem.AdminRole)]
         public async Task<IActionResult> AdminAddProduct([FromQuery] ProductCreateRequest request)
@@ -79,6 +98,11 @@ namespace Advanced_CSharp.API.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
+        /// <summary>
+        /// AdminUpdateProduct
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
 
         [Route("admin/update-product")]
         [HttpPut]
@@ -97,7 +121,11 @@ namespace Advanced_CSharp.API.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
-
+        /// <summary>
+        /// AdminDeleteProduct
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         [Route("admin/delete-product")]
         [HttpDelete]
         [Authorize(ConstSystem.AdminRole)]

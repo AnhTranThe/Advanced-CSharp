@@ -7,15 +7,24 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Advanced_CSharp.Service.Services
 {
+
     public class ApplicationService : IApplicationService
     {
         private readonly AdvancedCSharpDbContext _context;
-
+        /// <summary>
+        /// ApplicationService
+        /// </summary>
+        /// <param name="context"></param>
         public ApplicationService(AdvancedCSharpDbContext context)
         {
             _context = context;
 
         }
+        /// <summary>
+        /// GetApplicationVersionList
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         public async Task<AppVersionGetListResponse> GetApplicationVersionList(AppVersionGetListRequest request)
         {
 

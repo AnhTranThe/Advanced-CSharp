@@ -15,7 +15,11 @@ namespace Advanced_CSharp.Service.Services
         private readonly AdvancedCSharpDbContext _context;
         private readonly IUnitWork _unitWork;
         private readonly string _userName;
-
+        /// <summary>
+        /// ProductService
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="unitWork"></param>
         public ProductService(AdvancedCSharpDbContext context, IUnitWork unitWork)
         {
             _context = context;
@@ -24,7 +28,11 @@ namespace Advanced_CSharp.Service.Services
             _userName = string.IsNullOrEmpty(ConstSystem.loggedUserName) ? "System" : ConstSystem.loggedUserName;
 
         }
-
+        /// <summary>
+        /// GetAllAsync
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         public async Task<ProductGetListResponse> GetAllAsync(ProductGetListRequest request)
         {
             ProductGetListResponse response = new();
@@ -86,7 +94,11 @@ namespace Advanced_CSharp.Service.Services
             }
             return response;
         }
-
+        /// <summary>
+        /// GetByIdAsync
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         public async Task<ProductGetByIdResponse> GetByIdAsync(ProductGetByIdRequest request)
         {
             ProductGetByIdResponse response = new();
@@ -139,7 +151,11 @@ namespace Advanced_CSharp.Service.Services
             return response;
 
         }
-
+        /// <summary>
+        /// AddAsync
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         public async Task<ProductCreateResponse> AddAsync(ProductCreateRequest request)
         {
             ProductCreateResponse response = new();
@@ -204,7 +220,11 @@ namespace Advanced_CSharp.Service.Services
 
             return response;
         }
-
+        /// <summary>
+        /// UpdateAsync
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         public async Task<ProductUpdateResponse> UpdateAsync(ProductUpdateRequest request)
         {
             ProductUpdateResponse response = new();
@@ -325,7 +345,11 @@ namespace Advanced_CSharp.Service.Services
             return response;
 
         }
-
+        /// <summary>
+        /// DeleteAsync
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         public async Task<ProductDeleteResponse> DeleteAsync(ProductDeleteRequest request)
         {
             ProductDeleteResponse response = new();
@@ -382,7 +406,11 @@ namespace Advanced_CSharp.Service.Services
             }
             return response;
         }
-
+        /// <summary>
+        /// CheckAsync
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         public async Task<ProductCheckResponse> CheckAsync(ProductCheckRequest request)
         {
             ProductCheckResponse response = new();
@@ -429,7 +457,11 @@ namespace Advanced_CSharp.Service.Services
 
             return response;
         }
-
+        /// <summary>
+        /// UpdateInventoryAsync
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         public async Task<ProductUpdateInventoryResponse> UpdateInventoryAsync(ProductUpdateInventoryRequest request)
         {
             ProductUpdateInventoryResponse response = new();

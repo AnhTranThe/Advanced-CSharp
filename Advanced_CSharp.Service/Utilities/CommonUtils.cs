@@ -6,6 +6,11 @@ namespace Advanced_CSharp.Service.Utilities
     {
 
         private static readonly CultureInfo provider = CultureInfo.InvariantCulture;
+        /// <summary>
+        /// convertToDate
+        /// </summary>
+        /// <param name="date"></param>
+        /// <returns></returns>
         public static DateTime convertToDate(string date)
         {
             return DateTime.ParseExact(date, "dd/MM/yyyy", provider);

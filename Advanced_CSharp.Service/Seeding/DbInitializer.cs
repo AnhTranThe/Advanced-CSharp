@@ -8,7 +8,11 @@ namespace Advanced_CSharp.Service.Seeding
 {
     public static class DbInitializer
     {
-
+        /// <summary>
+        /// Initialize
+        /// </summary>
+        /// <param name="context"></param>
+        /// <returns></returns>
         public static async Task Initialize(AdvancedCSharpDbContext context)
         {
 

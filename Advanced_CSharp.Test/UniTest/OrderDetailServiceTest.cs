@@ -11,14 +11,17 @@ namespace Advanced_CSharp.Test.UniTest
     {
         private readonly IOrderDetailService _orderDetailService;
         /// <summary>
-        /// CartServiceTest
+        /// OrderDetailServiceTest
         /// </summary>
         public OrderDetailServiceTest()
         {
             _orderDetailService = DomainServiceCollectionExtensions.SetupOrderDetailService();
         }
 
-
+        /// <summary>
+        /// GetItemFromAllOrderByUserIdTestAsync happy case request
+        /// </summary>
+        /// <returns></returns>
         [TestMethod]
         public async Task GetItemFromAllOrderByUserIdTestAsync()
         {
@@ -32,7 +35,10 @@ namespace Advanced_CSharp.Test.UniTest
             Assert.IsTrue(response.baseResponse.Success && response.orderDetailResponses.Count > 0);
 
         }
-
+        /// <summary>
+        /// GetItemFromPerOrderByUserIdTestAsync happy case request
+        /// </summary>
+        /// <returns></returns>
 
         [TestMethod]
         public async Task GetItemFromPerOrderByUserIdTestAsync()

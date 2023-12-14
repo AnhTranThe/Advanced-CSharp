@@ -9,13 +9,20 @@ namespace Advanced_CSharp.Test.UniTest
     [TestClass]
     public class UserServiceTest
     {
-
+        /// <summary>
+        /// UserServiceTest
+        /// </summary>
+        /// <returns></returns>
 
         private readonly IUserService _userService;
         public UserServiceTest()
         {
             _userService = DomainServiceCollectionExtensions.SetupUserService();
         }
+        /// <summary>
+        /// GetByAdminUserIdTestAsync happy case request
+        /// </summary>
+        /// <returns></returns>
 
         [TestMethod]
         public async Task GetByAdminUserIdTestAsync()
@@ -29,7 +36,10 @@ namespace Advanced_CSharp.Test.UniTest
             Assert.AreEqual(response.userResponse.Id, new Guid(ConstSystem.AdminUserId));
         }
 
-
+        /// <summary>
+        /// GetByTesterUserIdTestAsync happy case request
+        /// </summary>
+        /// <returns></returns>
         [TestMethod]
         public async Task GetByTesterUserIdTestAsync()
         {

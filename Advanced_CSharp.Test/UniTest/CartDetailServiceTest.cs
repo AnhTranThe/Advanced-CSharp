@@ -11,7 +11,7 @@ namespace Advanced_CSharp.Test.UniTest
     {
         private readonly ICartDetailService _cartDetailService;
         /// <summary>
-        /// CartServiceTest
+        /// CartDetailServiceTest
         /// </summary>
         public CartDetailServiceTest()
         {
@@ -19,7 +19,7 @@ namespace Advanced_CSharp.Test.UniTest
         }
 
         /// <summary>
-        /// GetCartByUserIdTestAsync happy case request
+        /// GetItemsAllByUserIdAsync happy case request
         /// </summary>
         /// <returns></returns>
         [TestMethod]

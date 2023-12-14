@@ -1,5 +1,8 @@
 ﻿namespace Advanced_CSharp.Database.Constants
 {
+    /// <summary>
+    /// Constant System
+    /// </summary>
     public static class ConstSystem
     {
 

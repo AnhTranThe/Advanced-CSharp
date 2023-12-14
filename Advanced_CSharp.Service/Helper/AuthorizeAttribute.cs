@@ -13,11 +13,17 @@ namespace Advanced_CSharp.Service.Helper
     {
 
         private readonly string _roles;
+        /// <summary>
+        /// AuthorizeAttribute 
+        /// </summary>
         public AuthorizeAttribute(string roles)
         {
             _roles = roles;
         }
-
+        /// <summary>
+        /// OnAuthorization
+        /// </summary>
+        /// <param name="context"></param>
         public void OnAuthorization(AuthorizationFilterContext context)
         {
             // skip authorization if action is decorated with [AllowAnonymous] attribute

@@ -14,6 +14,7 @@ using Advanced_CSharp.Service.Interfaces;
 
 namespace Advanced_CSharp.Service.Services
 {
+
     public class AuthenticationService : IAuthenticationService
     {
 
@@ -24,7 +25,14 @@ namespace Advanced_CSharp.Service.Services
         private readonly IJwtService _jwtUtils;
         private readonly AdvancedCSharpDbContext _context;
 
-
+        /// <summary>
+        /// AuthenticationService
+        /// </summary>
+        /// <param name="userService"></param>
+        /// <param name="jwtUtils"></param>
+        /// <param name="userRoleService"></param>
+        /// <param name="roleService"></param>
+        /// <param name="context"></param>
         public AuthenticationService(IUserService userService, IJwtService jwtUtils, IUserRoleService userRoleService, IRoleService roleService, AdvancedCSharpDbContext context)
         {
 
@@ -36,7 +44,11 @@ namespace Advanced_CSharp.Service.Services
             _context = context;
 
         }
-
+        /// <summary>
+        /// RegisterUser
+        /// </summary>
+        /// <param name="Request"></param>
+        /// <returns></returns>
         public async Task<AuthenticationRegisterResponse> RegisterUser(AuthenticationRegisterRequest Request)
         {
 
@@ -143,7 +155,11 @@ namespace Advanced_CSharp.Service.Services
 
             return response;
         }
-
+        /// <summary>
+        /// ValidateUser
+        /// </summary>
+        /// <param name="Request"></param>
+        /// <returns></returns>
         public async Task<AuthenticationLoginResponse> ValidateUser(AuthenticationLoginRequest Request)
         {
             AuthenticationLoginResponse response = new();

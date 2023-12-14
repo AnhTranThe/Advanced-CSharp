@@ -15,6 +15,11 @@ namespace Advanced_CSharp.Service.Services
         private readonly AdvancedCSharpDbContext _context;
         private readonly IUnitWork _unitWork;
         private readonly string _userName;
+        /// <summary>
+        /// UserRoleService
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="unitWork"></param>
         public UserRoleService(AdvancedCSharpDbContext context, IUnitWork unitWork)
         {
             _context = context;
@@ -22,6 +27,11 @@ namespace Advanced_CSharp.Service.Services
             _userName = string.IsNullOrEmpty(ConstSystem.loggedUserName) ? "System" : ConstSystem.loggedUserName;
 
         }
+        /// <summary>
+        /// AddUserRoleAsync
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         public async Task<UserRoleCreateResponse> AddUserRoleAsync(UserRoleCreateRequest request)
         {
             UserRoleCreateResponse response = new();
@@ -88,7 +98,11 @@ namespace Advanced_CSharp.Service.Services
             return response;
 
         }
-
+        /// <summary>
+        /// GetByIdAsync
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         public async Task<UserRoleGetByIdResponse> GetByIdAsync(UserRoleGetByIdRequest request)
         {
             UserRoleGetByIdResponse response = new();
@@ -139,7 +153,11 @@ namespace Advanced_CSharp.Service.Services
 
             return response;
         }
-
+        /// <summary>
+        /// GetByIdRegisterAsync
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         public async Task<UserRoleGetByIdResponse> GetByIdRegisterAsync(UserRoleGetByIdRequest request)
         {
             UserRoleGetByIdResponse response = new();

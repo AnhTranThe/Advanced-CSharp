@@ -16,7 +16,11 @@ namespace Advanced_CSharp.Service.Services
         private readonly IUnitWork _unitWork;
         private readonly string _userName;
 
-
+        /// <summary>
+        /// UserService
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="unitWork"></param>
         public UserService(AdvancedCSharpDbContext context, IUnitWork unitWork)
         {
             _context = context;
@@ -25,6 +29,11 @@ namespace Advanced_CSharp.Service.Services
 
 
         }
+        /// <summary>
+        /// GetByIdAsync
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         public async Task<UserGetByIdResponse> GetByIdAsync(UserGetByIdRequest request)
         {
             UserGetByIdResponse response = new();
@@ -81,7 +90,11 @@ namespace Advanced_CSharp.Service.Services
             return response;
 
         }
-
+        /// <summary>
+        /// SearchAsync
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         public async Task<UserSearchResponse> SearchAsync(UserSearchRequest request)
         {
             UserSearchResponse response = new();
@@ -140,7 +153,11 @@ namespace Advanced_CSharp.Service.Services
 
             return response;
         }
-
+        /// <summary>
+        /// AddAsync
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         public async Task<UserCreateResponse> AddAsync(UserCreateRequest request)
         {
             UserCreateResponse response = new();
@@ -198,7 +215,11 @@ namespace Advanced_CSharp.Service.Services
 
             return response;
         }
-
+        /// <summary>
+        /// UpdateAsync
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         public async Task<UserUpdateResponse> UpdateAsync(UserUpdateRequest request)
         {
 
@@ -331,7 +352,11 @@ namespace Advanced_CSharp.Service.Services
 
             return response;
         }
-
+        /// <summary>
+        /// GenerateTokenAsync
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         public async Task<UserGenerateTokenResponse> GenerateTokenAsync(UserGenerateTokenRequest request)
         {
             UserGenerateTokenResponse response = new();

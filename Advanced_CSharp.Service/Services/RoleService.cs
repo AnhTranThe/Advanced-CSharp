@@ -11,13 +11,21 @@ namespace Advanced_CSharp.Service.Services
     public class RoleService : IRoleService
     {
         private readonly AdvancedCSharpDbContext _context;
-
+        /// <summary>
+        /// RoleService
+        /// </summary>
+        /// <param name="context"></param>
         public RoleService(AdvancedCSharpDbContext context)
         {
 
             _context = context;
 
         }
+        /// <summary>
+        /// SearchAsync
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         public async Task<RoleSearchResponse> SearchAsync(RoleSearchRequest request)
         {
             RoleSearchResponse response = new();
@@ -64,7 +72,11 @@ namespace Advanced_CSharp.Service.Services
 
         }
 
-
+        /// <summary>
+        /// GetByIdAsync
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         public async Task<RoleGetByIdResponse> GetByIdAsync(RoleGetByIdRequest request)
         {
 

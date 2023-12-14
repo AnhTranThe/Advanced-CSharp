@@ -6,11 +6,18 @@ namespace Advanced_CSharp.Database.EF
 {
     public class AdvancedCSharpDbContext : DbContext
     {
-
+        /// <summary>
+        /// AdvancedCSharpDbContext
+        /// </summary>
+        /// <param name="options"></param>
         public AdvancedCSharpDbContext(DbContextOptions options) : base(options)
         {
 
         }
+        /// <summary>
+        /// OnModelCreating
+        /// </summary>
+        /// <param name="modelBuilder"></param>
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             _ = modelBuilder.Entity<AppUserRole>()
@@ -24,7 +31,11 @@ namespace Advanced_CSharp.Database.EF
         }
 
 
-
+        /// <summary>
+        /// SaveChangesAsync
+        /// </summary>
+        /// <param name="username"></param>
+        /// <returns></returns>
         public virtual Task<int> SaveChangesAsync(string username = "")
         {
             foreach (Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry<BaseEntity> entry in ChangeTracker.Entries<BaseEntity>())

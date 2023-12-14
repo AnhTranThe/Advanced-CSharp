@@ -13,11 +13,21 @@ namespace Advanced_CSharp.API.Controllers
     {
         private readonly IAuthenticationService _authenticationService;
         private readonly IloggingService _loggingService;
+        /// <summary>
+        /// AuthenticationController
+        /// </summary>
+        /// <param name="authenticationService"></param>
+        /// <param name="loggingService"></param>
         public AuthenticationController(IAuthenticationService authenticationService, IloggingService loggingService)
         {
             _authenticationService = authenticationService;
             _loggingService = loggingService;
         }
+        /// <summary>
+        /// Authenticate
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         [HttpPost("authenticate")]
         [AllowAnonymous]
         public async Task<IActionResult> Authenticate([FromQuery] AuthenticationLoginRequest request)
@@ -41,7 +51,11 @@ namespace Advanced_CSharp.API.Controllers
 
             }
         }
-
+        /// <summary>
+        /// Register
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         [HttpPost("register")]
         [AllowAnonymous]
         public async Task<IActionResult> Register([FromQuery] AuthenticationRegisterRequest request)

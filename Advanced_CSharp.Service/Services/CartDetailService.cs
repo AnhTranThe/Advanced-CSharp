@@ -21,6 +21,13 @@ namespace Advanced_CSharp.Service.Services
         private readonly ICartService _cartService;
         private readonly Guid _userId;
         private readonly string _userName;
+        /// <summary>
+        /// CartDetailService
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="unitWork"></param>
+        /// <param name="productService"></param>
+        /// <param name="cartService"></param>
         public CartDetailService(AdvancedCSharpDbContext context, IUnitWork unitWork, IProductService productService, ICartService cartService)
         {
             _context = context;
@@ -31,6 +38,11 @@ namespace Advanced_CSharp.Service.Services
             _cartService = cartService;
 
         }
+        /// <summary>
+        /// AddItemAsync
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         public async Task<CartDetailAddItemResponse> AddItemAsync(CartDetailAddItemRequest request)
         {
             CartDetailAddItemResponse response = new();
@@ -131,7 +143,11 @@ namespace Advanced_CSharp.Service.Services
 
             return response;
         }
-
+        /// <summary>
+        /// DeleteItemAsync
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         public async Task<CartDetailDeleteItemResponse> DeleteItemAsync(CartDetailDeleteItemRequest request)
         {
             CartDetailDeleteItemResponse response = new();
@@ -185,7 +201,11 @@ namespace Advanced_CSharp.Service.Services
 
             return response;
         }
-
+        /// <summary>
+        /// GetItemsAllAsync
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         public async Task<CartDetailGetItemListResponse> GetItemsAllAsync(CartDetailGetItemListRequest request)
         {
             CartDetailGetItemListResponse response = new();
@@ -293,7 +313,11 @@ namespace Advanced_CSharp.Service.Services
 
             return response;
         }
-
+        /// <summary>
+        /// UpdateItemQuantityAsync
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         public async Task<CartDetailUpdateItemQuantityResponse> UpdateItemQuantityAsync(CartDetailUpdateItemQuantityRequest request)
         {
             CartDetailUpdateItemQuantityResponse response = new();

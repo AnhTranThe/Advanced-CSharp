@@ -25,7 +25,13 @@ namespace Advanced_CSharp.Service.Services
         private readonly IRoleService _roleService;
 
 
-
+        /// <summary>
+        /// JwtService
+        /// </summary>
+        /// <param name="appSettings"></param>
+        /// <param name="userService"></param>
+        /// <param name="userRoleService"></param>
+        /// <param name="roleService"></param>
 
         public JwtService(IOptions<AppSettings> appSettings, IUserService userService, IUserRoleService userRoleService, IRoleService roleService)
         {
@@ -35,7 +41,11 @@ namespace Advanced_CSharp.Service.Services
             _userRoleService = userRoleService;
             _roleService = roleService;
         }
-
+        /// <summary>
+        /// GenerateToken
+        /// </summary>
+        /// <param name="userResponse"></param>
+        /// <returns></returns>
         public async Task<string> GenerateToken(UserResponse userResponse)
         {
             JwtSecurityTokenHandler tokenHandler = new();
@@ -112,7 +122,11 @@ namespace Advanced_CSharp.Service.Services
 
             return jwtToken;
         }
-
+        /// <summary>
+        /// ValidateJwtToken
+        /// </summary>
+        /// <param name="token"></param>
+        /// <returns></returns>
         public Guid? ValidateJwtToken(string token)
         {
             try

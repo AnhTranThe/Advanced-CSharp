@@ -1,5 +1,8 @@
 ﻿namespace Advanced_CSharp.Database.Commons
 {
+    /// <summary>
+    /// BaseEntity
+    /// </summary>
     public abstract class BaseEntity
     {
         public Guid Id { get; set; } = Guid.NewGuid();

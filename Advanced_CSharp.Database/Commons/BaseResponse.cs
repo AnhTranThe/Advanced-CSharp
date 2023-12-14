@@ -1,5 +1,8 @@
 ﻿namespace Advanced_CSharp.Database.Commons
 {
+    /// <summary>
+    /// BaseResponse
+    /// </summary>
     public class BaseResponse
     {
         public string? Message { get; set; }

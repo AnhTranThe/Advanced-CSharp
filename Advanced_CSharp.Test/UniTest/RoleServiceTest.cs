@@ -10,12 +10,19 @@ namespace Advanced_CSharp.Test.UniTest
     public class RoleServiceTest
     {
 
-
+        /// <summary>
+        /// RoleServiceTest
+        /// </summary>
         private readonly IRoleService _roleService;
         public RoleServiceTest()
         {
             _roleService = DomainServiceCollectionExtensions.SetupRoleService();
         }
+
+        /// <summary>
+        /// GetByAdminRoleIdTestAsync happy case request
+        /// </summary>
+        /// <returns></returns>
 
         [TestMethod]
         public async Task GetByAdminRoleIdTestAsync()
@@ -30,6 +37,10 @@ namespace Advanced_CSharp.Test.UniTest
         }
 
 
+        /// <summary>
+        /// GetByCustomerRoleIdTestAsync happy case request
+        /// </summary>
+        /// <returns></returns>
         [TestMethod]
         public async Task GetByCustomerRoleIdTestAsync()
         {

@@ -15,7 +15,12 @@ namespace Advanced_CSharp.API.Controllers
 
         private readonly ICartDetailService _cartDetailService;
         private readonly IloggingService _loggingService;
-
+        /// <summary>
+        /// CartController
+        /// </summary>
+        /// <param name="cartDetailService"></param>
+        /// <param name="loggingService"></param>
+        /// <exception cref="ArgumentNullException"></exception>
         public CartController(ICartDetailService cartDetailService, IloggingService loggingService)
         {
 
@@ -27,7 +32,7 @@ namespace Advanced_CSharp.API.Controllers
 
 
         /// <summary>
-        ///  Customer Area
+        ///  AddItemToCart
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
@@ -54,6 +59,11 @@ namespace Advanced_CSharp.API.Controllers
             }
         }
 
+        /// <summary>
+        /// DeleteItemFromCart
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         [Route("delete-user-cart-item")]
         [HttpPost]
         [Authorize(ConstSystem.CustomerRole)]
@@ -76,7 +86,11 @@ namespace Advanced_CSharp.API.Controllers
             }
         }
 
-
+        /// <summary>
+        /// GetAllItemFromCart
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         [Route("get-all-user-cart-item")]
         [HttpGet]
         [Authorize(ConstSystem.CustomerRole)]
@@ -104,7 +118,11 @@ namespace Advanced_CSharp.API.Controllers
             }
         }
 
-
+        /// <summary>
+        /// UpdateItemQuantityFromCart
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         [Route("update-cart-item-quantity")]
         [HttpPut]
         [Authorize(ConstSystem.CustomerRole)]

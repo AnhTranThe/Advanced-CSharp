@@ -148,7 +148,12 @@ namespace Advanced_CSharp.Test
 
             return orderDetailService;
         }
-
+        /// <summary>
+        /// AddDomainServices
+        /// </summary>
+        /// <param name="services"></param>
+        /// <param name="configuration"></param>
+        /// <returns></returns>
 
         public static IServiceCollection AddDomainServices(this IServiceCollection services, IConfiguration configuration)
         {

@@ -12,14 +12,28 @@ namespace Advanced_CSharp.Service.Helper
 {
     public class JwtMiddleware
     {
+        /// <summary>
+        /// RequestDelegate
+        /// </summary>
         private readonly RequestDelegate _next;
-
+        /// <summary>
+        /// JwtMiddleware
+        /// </summary>
+        /// <param name="next"></param>
         public JwtMiddleware(RequestDelegate next)
         {
             _next = next;
 
         }
-
+        /// <summary>
+        /// Invoke
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="userService"></param>
+        /// <param name="jwtUtils"></param>
+        /// <param name="roleService"></param>
+        /// <param name="userRoleService"></param>
+        /// <returns></returns>
         public async Task Invoke(HttpContext context, IUserService userService, IJwtService jwtUtils, IRoleService roleService, IUserRoleService userRoleService)
         {
             string? token = context.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").LastOrDefault();

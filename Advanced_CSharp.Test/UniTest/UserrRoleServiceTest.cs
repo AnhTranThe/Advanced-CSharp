@@ -9,11 +9,21 @@ namespace Advanced_CSharp.Test.UniTest
     [TestClass]
     public class UserrRoleServiceTest
     {
+        /// <summary>
+        /// UserrRoleServiceTest
+        /// </summary>
         private readonly IUserRoleService _userRoleService;
         public UserrRoleServiceTest()
         {
             _userRoleService = DomainServiceCollectionExtensions.SetupUserRoleService();
         }
+
+
+        /// <summary>
+        /// GetUserRoleByUserIdTestAsync happy case request
+        /// </summary>
+        /// <returns></returns>
+
         [TestMethod]
         public async Task GetUserRoleByUserIdTestAsync()
         {
@@ -26,6 +36,11 @@ namespace Advanced_CSharp.Test.UniTest
             Assert.AreEqual(response.userRoleResponse.UserId, new Guid(ConstSystem.AdminUserId));
         }
 
+
+        /// <summary>
+        /// GetUserRoleByRoleIdTestAsync happy case request
+        /// </summary>
+        /// <returns></returns>
 
         [TestMethod]
         public async Task GetUserRoleByRoleIdTestAsync()

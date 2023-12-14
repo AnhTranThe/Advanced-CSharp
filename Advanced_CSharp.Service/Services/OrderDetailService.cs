@@ -24,6 +24,14 @@ namespace Advanced_CSharp.Service.Services
         private readonly IProductService _productService;
         private readonly Guid _userId;
         private readonly string _userName;
+        /// <summary>
+        /// OrderDetailService
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="orderService"></param>
+        /// <param name="cartService"></param>
+        /// <param name="productService"></param>
+        /// <param name="unitWork"></param>
         public OrderDetailService(AdvancedCSharpDbContext context,
             IOrderService orderService,
             ICartService cartService,
@@ -40,7 +48,10 @@ namespace Advanced_CSharp.Service.Services
             _userName = ConstSystem.loggedUserName;
             _productService = productService;
         }
-
+        /// <summary>
+        /// AddItemAsync
+        /// </summary>
+        /// <returns></returns>
         public async Task<OrderDetailAddItemResponse> AddItemAsync()
         {
             OrderDetailAddItemResponse response = new();
@@ -215,7 +226,11 @@ namespace Advanced_CSharp.Service.Services
 
         }
 
-
+        /// <summary>
+        /// GetItemByIdAsync
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         public async Task<OrderDetailGetByIdResponse> GetItemByIdAsync(OrderDetailGetByIdRequest request)
         {
             OrderDetailGetByIdResponse response = new();
@@ -313,7 +328,11 @@ namespace Advanced_CSharp.Service.Services
 
             return response;
         }
-
+        /// <summary>
+        /// GetItemsAllAsync
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         public async Task<OrderDetailGetListResponse> GetItemsAllAsync(OrderDetailGetListRequest request)
         {
             OrderDetailGetListResponse response = new();

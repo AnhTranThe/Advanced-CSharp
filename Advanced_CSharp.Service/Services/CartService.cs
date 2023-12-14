@@ -16,7 +16,11 @@ namespace Advanced_CSharp.Service.Services
         private readonly IUnitWork _unitWork;
         private readonly string _userName;
         private readonly Guid _userId;
-
+        /// <summary>
+        /// CartService
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="unitWork"></param>
         public CartService(AdvancedCSharpDbContext context, IUnitWork unitWork)
         {
             _context = context;
@@ -25,7 +29,11 @@ namespace Advanced_CSharp.Service.Services
             _userName = ConstSystem.loggedUserName;
 
         }
-
+        /// <summary>
+        /// CheckAsync
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         public async Task<CartCheckResponse> CheckAsync(CartCheckRequest request)
         {
             CartCheckResponse response = new();
@@ -67,7 +75,11 @@ namespace Advanced_CSharp.Service.Services
 
             return response;
         }
-
+        /// <summary>
+        /// CreateAsync
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         public async Task<CartCreateResponse> CreateAsync(CartCreateRequest request)
         {
             CartCreateResponse response = new();
@@ -121,7 +133,11 @@ namespace Advanced_CSharp.Service.Services
 
             return response;
         }
-
+        /// <summary>
+        /// GetByIdAsync
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         public async Task<CartGetByIdResponse> GetByIdAsync(CartGetByIdRequest request)
         {
             CartGetByIdResponse response = new();
