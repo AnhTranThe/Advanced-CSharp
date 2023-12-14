@@ -1,23 +1,39 @@
 ﻿using Advanced_CSharp.Database.Commons;
 using Advanced_CSharp.Database.Constants;
-using Advanced_CSharp.Database.Entities;
+using Advanced_CSharp.Database.EF;
 using Advanced_CSharp.DTO.Requests.Authentication;
+using Advanced_CSharp.DTO.Requests.Role;
+using Advanced_CSharp.DTO.Requests.User;
+using Advanced_CSharp.DTO.Requests.UserRole;
 using Advanced_CSharp.DTO.Responses.Authentication;
+using Advanced_CSharp.DTO.Responses.Role;
+using Advanced_CSharp.DTO.Responses.User;
+using Advanced_CSharp.DTO.Responses.UserRole;
 using Advanced_CSharp.Service.Interfaces;
-using Microsoft.AspNetCore.Identity;
+
 
 namespace Advanced_CSharp.Service.Services
 {
     public class AuthenticationService : IAuthenticationService
     {
-        private readonly UserManager<AppUser> _userManager;
 
-        private readonly SignInManager<AppUser> _signInManager;
 
-        public AuthenticationService(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager)
+        private readonly IUserService _userService;
+        private readonly IUserRoleService _userRoleService;
+        private readonly IRoleService _roleService;
+        private readonly IJwtService _jwtUtils;
+        private readonly AdvancedCSharpDbContext _context;
+
+
+        public AuthenticationService(IUserService userService, IJwtService jwtUtils, IUserRoleService userRoleService, IRoleService roleService, AdvancedCSharpDbContext context)
         {
-            _userManager = userManager;
-            _signInManager = signInManager;
+
+
+            _userService = userService;
+            _jwtUtils = jwtUtils;
+            _userRoleService = userRoleService;
+            _roleService = roleService;
+            _context = context;
 
         }
 
@@ -30,72 +46,100 @@ namespace Advanced_CSharp.Service.Services
 
 
             // if didnt find out then continue logic 
-            try
+            using (Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction transaction = _context.Database.BeginTransaction())
             {
-
-                // check if existed user account in database 
-
-                AppUser userId = await _userManager.FindByEmailAsync(Request.Email);
-
-
-                if (userId != null)
+                try
                 {
 
-                    baseResponse.Message = "An account with this email already exists.";
-
-
-                }
-                if (Request.Password != Request.ComparePassword)
-                {
-
-                    baseResponse.Message = "Password and Confirmation Password must match.";
-
-                }
-
-                // Create new Appuser instance
-                AppUser appUser = new()
-                {
-                    FirstName = Request.FirstName,
-                    LastName = Request.LastName,
-                    Email = Request.Email,
-                    UserName = Request.UserName
-
-                };
-
-                IdentityResult result = await _userManager.CreateAsync(appUser, Request.Password);
-
-                if (result.Succeeded)
-                {
-                    IdentityResult addToRoleResult = await _userManager.AddToRoleAsync(appUser, ConstSystem.GuestRole);
-                    if (addToRoleResult.Succeeded)
+                    // check if existed user account in database 
+                    UserSearchRequest userSearchRequest = new()
                     {
+                        UserName = Request.UserName,
+                        Email = Request.Email
 
-                        baseResponse.Success = true;
-                        baseResponse.Message = "Register Succesfully";
+                    };
+                    UserSearchResponse userSearchResonse = await _userService.SearchAsync(userSearchRequest);
+                    if (userSearchResonse.BaseResponse.Success)
+                    {
+                        baseResponse.Message = "An account with this email already exists.";
+                        return response;
                     }
                     else
                     {
+                        if (Request.Password != Request.ComparePassword)
+                        {
 
-                        baseResponse.Message = "Add User to Role fail";
+                            baseResponse.Message = "Password and Confirmation Password must match.";
+                            return response;
+                        }
+                        // Create new Appuser instance
+                        UserCreateRequest userCreateRequest = new()
+                        {
+                            FirstName = Request.FirstName,
+                            LastName = Request.LastName,
+                            Email = Request.Email,
+                            UserName = Request.UserName,
+                            PasswordHash = BCrypt.Net.BCrypt.HashPassword(Request.Password)
+
+                        };
+                        UserCreateResponse userCreateResponse = await _userService.AddAsync(userCreateRequest);
+
+                        if (userCreateResponse == null)
+                        {
+                            baseResponse.Message = "Register failed. Please check provided information.";
+                            return response;
+                        }
+
+                        RoleSearchRequest roleSearchRequest = new()
+                        {
+                            RoleName = ConstSystem.CustomerRole
+                        };
+                        RoleSearchResponse roleSearchResponse = await _roleService.SearchAsync(roleSearchRequest);
+
+
+                        if (!roleSearchResponse.BaseResponse.Success)
+                        {
+                            baseResponse.Message = "There are no role customer";
+                            return response;
+
+                        }
+
+                        UserRoleCreateRequest userRoleCreateRequest = new()
+                        {
+                            roleId = roleSearchResponse.roleResponse.RoleId,
+                            userId = userCreateResponse.UserResponse.Id
+
+                        };
+                        UserRoleCreateResponse userRoleCreateResponse = await _userRoleService.AddUserRoleAsync(userRoleCreateRequest);
+
+                        if (userRoleCreateResponse != null)
+                        {
+
+                            baseResponse.Success = true;
+                            baseResponse.Message = "Register Succesfully";
+                        }
+                        else
+                        {
+
+                            baseResponse.Message = "Add User to Role fail";
+
+                        }
 
                     }
+                    transaction.Commit();
+
 
                 }
-                else
+                catch (Exception ex)
                 {
 
-                    baseResponse.Message = "Register fail, Please check provide informations";
-
+                    transaction.Rollback();
+                    baseResponse.Message = "An error occurred during registration.";
+                    baseResponse.Errors.Add(ex.Message);
                 }
 
             }
-            catch (Exception ex)
-            {
 
-
-                baseResponse.Message = "An error occurred during registration.";
-                baseResponse.Errors.Add(ex.Message);
-            }
 
             return response;
         }
@@ -109,30 +153,68 @@ namespace Advanced_CSharp.Service.Services
             try
             {
                 // Attempt to find the user by email or username
-                AppUser existedUser = await _userManager.FindByEmailAsync(Request.Email);
+                UserSearchRequest userSearchRequest = new()
+                {
+                    Email = Request.Email,
+                    UserName = Request.UserName
+                };
+
+                UserSearchResponse existedUser = await _userService.SearchAsync(userSearchRequest);
 
                 if (existedUser == null)
                 {
-                    baseResponse.Message = "not found account in database";
-
+                    baseResponse.Message = "User not found. Please check your email or username.";
+                    return response;
                 }
                 else
                 {
-                    // Use UserManager to verify the password
-                    SignInResult result = await _signInManager.CheckPasswordSignInAsync(existedUser, Request.Password, lockoutOnFailure: false);
-
-                    if (result.Succeeded)
+                    UserGetByIdRequest userGetByIdRequest = new()
                     {
-                        // Authentication successful
-                        baseResponse.Success = true;
-                        baseResponse.Message = "Login successful";
+                        Id = existedUser.userResponse.Id
+                    };
+                    UserGetByIdResponse userGetByIdResponse = await _userService.GetByIdAsync(userGetByIdRequest);
+
+                    if (userGetByIdResponse == null)
+                    {
+                        baseResponse.Message = "Not found User in database";
+                        return response;
+
                     }
                     else
-                    {
-                        // Authentication failed
 
-                        baseResponse.Message = "Invalid credentials";
+                    {
+                        if (!BCrypt.Net.BCrypt.Verify(Request.Password, existedUser.userResponse.PasswordHash))
+                        {
+                            baseResponse.Message = "Incorrect password. Please check your password.";
+                            return response;
+                        }
+                        else
+                        {
+
+                            string newToken = await _jwtUtils.GenerateToken(existedUser.userResponse);
+                            response.Token = newToken;
+                            UserGenerateTokenRequest userGenerateTokenRequest = new()
+                            {
+                                UserId = existedUser.userResponse.Id,
+                                Token = newToken
+                            };
+                            UserGenerateTokenResponse userGenerateTokenResponse = await _userService.GenerateTokenAsync(userGenerateTokenRequest);
+
+
+                            if (userGenerateTokenResponse != null)
+                            {
+                                // Authentication successful
+                                baseResponse.Success = true;
+                                baseResponse.Message = "Login successful";
+                            }
+
+
+                            return response;
+
+                        }
                     }
+
+
 
                 }
 

@@ -1,21 +1,22 @@
 ﻿using Advanced_CSharp.DTO.Requests.Authentication;
 using Advanced_CSharp.DTO.Responses.Authentication;
+using Advanced_CSharp.Service.Helper;
 using Advanced_CSharp.Service.Interfaces;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Advanced_CSharp.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+
     public class AuthenticationController : ControllerBase
     {
         private readonly IAuthenticationService _authenticationService;
-        public AuthenticationController(IAuthenticationService authenticationService)
+        private readonly IloggingService _loggingService;
+        public AuthenticationController(IAuthenticationService authenticationService, IloggingService loggingService)
         {
             _authenticationService = authenticationService;
-
+            _loggingService = loggingService;
         }
         [HttpPost("authenticate")]
         [AllowAnonymous]
@@ -28,13 +29,14 @@ namespace Advanced_CSharp.API.Controllers
                 {
                     return BadRequest(ModelState);
                 }
+
                 AuthenticationLoginResponse loginResponse = await _authenticationService.ValidateUser(request);
                 return loginResponse.BaseResponse.Success ? Ok(loginResponse) : BadRequest(loginResponse.BaseResponse.Message);
 
             }
             catch (Exception ex)
             {
-
+                _loggingService.LogError(ex);
                 return StatusCode(500, ex.Message);
 
             }
@@ -57,7 +59,7 @@ namespace Advanced_CSharp.API.Controllers
             }
             catch (Exception ex)
             {
-
+                _loggingService.LogError(ex);
                 return StatusCode(500, ex.Message);
             }
 

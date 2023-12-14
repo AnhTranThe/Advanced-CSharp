@@ -19,6 +19,7 @@ namespace Advanced_CSharp.DTO.Responses.Authentication
         public string? CreatedBy { get; set; }
         public DateTimeOffset? UpdatedDate { get; set; }
         public string? UpdatedBy { get; set; }
+        public string? Token { get; set; }
 
     }
 }

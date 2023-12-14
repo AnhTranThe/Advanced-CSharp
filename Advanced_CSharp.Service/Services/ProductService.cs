@@ -1,11 +1,11 @@
 ﻿
 using Advanced_CSharp.Database.Commons;
+using Advanced_CSharp.Database.Constants;
 using Advanced_CSharp.Database.EF;
 using Advanced_CSharp.Database.Entities;
 using Advanced_CSharp.DTO.Requests.Product;
 using Advanced_CSharp.DTO.Responses.Product;
 using Advanced_CSharp.Service.Interfaces;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
 namespace Advanced_CSharp.Service.Services
@@ -16,11 +16,13 @@ namespace Advanced_CSharp.Service.Services
         private readonly IUnitWork _unitWork;
         private readonly string _userName;
 
-        public ProductService(AdvancedCSharpDbContext context, IHttpContextAccessor httpContextAccessor, IUnitWork unitWork)
+        public ProductService(AdvancedCSharpDbContext context, IUnitWork unitWork)
         {
             _context = context;
             _unitWork = unitWork;
-            _userName = httpContextAccessor.HttpContext?.User?.Identity?.Name ?? "System";
+
+            _userName = string.IsNullOrEmpty(ConstSystem.loggedUserName) ? "System" : ConstSystem.loggedUserName;
+
         }
 
         public async Task<ProductGetListResponse> GetAllAsync(ProductGetListRequest request)
@@ -147,37 +149,48 @@ namespace Advanced_CSharp.Service.Services
             {
                 if (_context != null && _context.Products != null)
                 {
-                    Product newProduct = new()
-                    {
-                        Name = request.Name,
-                        Price = request.Price,
-                        Inventory = request.Inventory,
-                        Unit = request.Unit,
-                        Images = request.Images,
-                        Category = request.Category,
 
-                    };
-                    _ = await _context.Products.AddAsync(newProduct);
-                    _ = await _unitWork.CompleteAsync(_userName);
-
-                    // create DTO to product info
-                    ProductResponse productResponse = new()
+                    ProductCheckRequest productCheckRequest = new()
                     {
-                        Id = newProduct.Id,
-                        Name = newProduct.Name,
-                        Price = newProduct.Price,
-                        Inventory = newProduct.Inventory,
-                        Unit = newProduct.Unit,
-                        Images = newProduct.Images,
-                        Category = newProduct.Category,
-                        CreatedAt = newProduct.CreatedAt,
-                        CreatedBy = newProduct.CreatedBy,
-                        UpdatedAt = newProduct.UpdatedAt,
-                        UpdatedBy = newProduct.UpdatedBy
+                        ProductName = request.Name
                     };
 
-                    response.productCreateResponse = productResponse;
-                    baseResponse.Success = true;
+                    ProductCheckResponse productCheckResponse = await CheckAsync(productCheckRequest);
+                    if (!productCheckResponse.baseResponse.Success)
+                    {
+                        Product newProduct = new()
+                        {
+                            Name = request.Name,
+                            Price = request.Price,
+                            Inventory = request.Inventory,
+                            Unit = request.Unit,
+                            Images = request.Images,
+                            Category = request.Category,
+
+                        };
+                        _ = await _context.Products.AddAsync(newProduct);
+                        _ = await _unitWork.CompleteAsync(_userName);
+                        // create DTO to product info
+                        ProductResponse productResponse = new()
+                        {
+                            Id = newProduct.Id,
+                            Name = newProduct.Name,
+                            Price = newProduct.Price,
+                            Inventory = newProduct.Inventory,
+                            Unit = newProduct.Unit,
+                            Images = newProduct.Images,
+                            Category = newProduct.Category,
+                            CreatedAt = newProduct.CreatedAt,
+                            CreatedBy = newProduct.CreatedBy,
+                            UpdatedAt = newProduct.UpdatedAt,
+                            UpdatedBy = newProduct.UpdatedBy
+                        };
+                        response.productCreateResponse = productResponse;
+                        baseResponse.Success = true;
+                        baseResponse.Message = "Create new Product succesfully";
+
+                    }
+
 
                 }
 
@@ -370,6 +383,147 @@ namespace Advanced_CSharp.Service.Services
             return response;
         }
 
+        public async Task<ProductCheckResponse> CheckAsync(ProductCheckRequest request)
+        {
+            ProductCheckResponse response = new();
+            BaseResponse baseResponse = response.baseResponse;
+            baseResponse.Success = false;
 
+            try
+            {
+                if (_context != null && _context.Products != null)
+                {
+                    Product? existedProduct = new();
+                    if (request.ProductId != Guid.Empty)
+                    {
+                        existedProduct = await _context.Products.FindAsync(request.ProductId);
+                    }
+                    else if (!string.IsNullOrEmpty(request.ProductName))
+                    {
+                        existedProduct = await _context.Products.Where(t => request.ProductName.Contains(t.Name)).FirstOrDefaultAsync();
+                    }
+
+                    if (existedProduct != null)
+                    {
+
+                        baseResponse.Success = true;
+                        baseResponse.Message = "Entity found";
+
+
+                    }
+                    else
+                    {
+
+                        baseResponse.Message = "Entity not found.";
+
+                    }
+                }
+            }
+
+            catch (Exception ex)
+            {
+                // Handle exceptions, log, or rethrow
+
+                baseResponse.Message = $"An error occurred while check existed the entity: {ex.Message}";
+            }
+
+            return response;
+        }
+
+        public async Task<ProductUpdateInventoryResponse> UpdateInventoryAsync(ProductUpdateInventoryRequest request)
+        {
+            ProductUpdateInventoryResponse response = new();
+            BaseResponse baseResponse = response.BaseResponse;
+            baseResponse.Success = false;
+            try
+            {
+                if (_context != null && _context.Products != null)
+                {
+
+                    // Check if the product exists
+                    Product? existedProduct = await _context.Products.FindAsync(request.Id);
+
+                    if (existedProduct != null)
+                    {
+
+                        ProductResponse oldProduct = new()
+                        {
+                            Id = existedProduct.Id,
+                            Name = existedProduct.Name,
+                            Price = existedProduct.Price,
+                            Inventory = existedProduct.Inventory,
+                            Unit = existedProduct.Unit,
+                            Images = existedProduct.Images,
+                            Category = existedProduct.Category,
+                            CreatedAt = existedProduct.CreatedAt,
+                            CreatedBy = existedProduct.CreatedBy,
+                            UpdatedAt = existedProduct.UpdatedAt,
+                            UpdatedBy = existedProduct.UpdatedBy
+
+                        };
+
+
+                        if (request.Inventory != 0)
+                        {
+                            existedProduct.Inventory = request.Inventory;
+                        }
+
+
+                        // Save changes to the database
+
+
+                        //_userName
+                        _ = await _unitWork.CompleteAsync(_userName);
+
+                        // Generate DTO for product information after update
+                        ProductResponse updatedProduct = new()
+                        {
+                            Id = existedProduct.Id,
+                            Name = existedProduct.Name,
+                            Price = existedProduct.Price,
+                            Inventory = existedProduct.Inventory,
+                            Unit = existedProduct.Unit,
+                            Images = existedProduct.Images,
+                            Category = existedProduct.Category,
+                            CreatedAt = existedProduct.CreatedAt,
+                            CreatedBy = existedProduct.CreatedBy,
+                            UpdatedAt = existedProduct.UpdatedAt,
+                            UpdatedBy = existedProduct.UpdatedBy
+
+                        };
+
+                        baseResponse.Success = true;
+                        response.OldProductResponse = oldProduct;
+                        response.UpdatedProductResponse = updatedProduct;
+
+                    }
+                    else
+                    {
+
+
+                        baseResponse.Message = "Product found but null";
+
+
+                    }
+                }
+                else
+                {
+
+
+                    baseResponse.Message = "Existed Product not found ";
+
+
+                }
+
+            }
+            catch (Exception ex)
+            {
+                // Handle exceptions, log, or rethrow
+
+                baseResponse.Message = $"An error occurred while updating the entity: {ex.Message}";
+            }
+
+            return response;
+        }
     }
 }

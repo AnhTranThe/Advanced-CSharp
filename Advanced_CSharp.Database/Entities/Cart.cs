@@ -7,6 +7,7 @@ namespace Advanced_CSharp.Database.Entities
     {
         public Guid Id { get; set; }
         public Guid UserId { get; set; }
+        public List<CartDetail>? cartDetails { get; set; }
 
     }
 }
