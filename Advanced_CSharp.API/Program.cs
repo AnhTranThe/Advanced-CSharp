@@ -13,6 +13,8 @@ builder.Services.ConfigureAddSwagger();
 builder.Services.ConfigureAuthentication(builder.Configuration);
 builder.Services.AddAuthorization();
 // custom service add config
+
+
 builder.Services.ConfigureCors();
 builder.Services.AddLog4net();
 builder.Services.ConfigureSqlContext(builder.Configuration);

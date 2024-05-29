@@ -35,7 +35,7 @@ namespace Advanced_CSharp.API.Controllers
 
         [Route("get-all-products")]
         [HttpGet]
-        [Authorize($"{ConstSystem.AdminRole},{ConstSystem.CustomerRole}")]
+
         public async Task<IActionResult> GetAllProducts([FromQuery] ProductGetListRequest request)
         {
             try
