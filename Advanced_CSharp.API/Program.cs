@@ -36,7 +36,7 @@ WebApplication app = builder.Build();
 //}
 _ = app.UseSwagger();
 _ = app.UseSwaggerUI();
-app.UseHttpsRedirection();
+_ = app.UseHttpsRedirection();
 app.UseCors("CorsPolicy");
 app.UseStaticFiles();
 
