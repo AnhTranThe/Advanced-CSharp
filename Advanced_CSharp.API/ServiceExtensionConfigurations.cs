@@ -2,7 +2,9 @@
 using Advanced_CSharp.Service.Interfaces;
 using Advanced_CSharp.Service.Services;
 using log4net;
-using log4net.Config;
+using log4net.Appender;
+using log4net.Layout;
+using log4net.Repository.Hierarchy;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -40,11 +42,73 @@ namespace Advanced_CSharp.API
         /// AddLog4net
         /// </summary>
         /// <param name="services"></param>
-        public static void AddLog4net(this IServiceCollection services)
+        public static void AddLog4net(this IServiceCollection services, IConfiguration configuration)
         {
-            _ = XmlConfigurator.Configure(new FileInfo("log4net.config"));
+            ConfigureLog4Net(configuration.GetSection("Logging:Log4Net"));
+            //_ = XmlConfigurator.Configure(new FileInfo("log4net.config"));
             _ = services.AddSingleton(LogManager.GetLogger(typeof(Program)));
         }
+
+        private static void ConfigureLog4Net(IConfigurationSection log4NetConfig)
+        {
+            Hierarchy hierarchy = (Hierarchy)LogManager.GetRepository();
+
+            Logger rootLogger = hierarchy.Root;
+            rootLogger.Level = log4net.Core.Level.All;
+
+            IConfigurationSection appenders = log4NetConfig.GetSection("Appenders");
+            foreach (IConfigurationSection? appenderSection in appenders.GetChildren())
+            {
+                Type? appenderType = Type.GetType(appenderSection.GetValue<string>("Type"));
+                if (appenderType == null)
+                {
+                    continue;
+                }
+
+                AppenderSkeleton? appender = (AppenderSkeleton)Activator.CreateInstance(appenderType);
+                if (appender == null)
+                {
+                    continue;
+                }
+
+                if (appender is RollingFileAppender rollingFileAppender)
+                {
+                    rollingFileAppender.File = appenderSection.GetValue<string>("File");
+                    rollingFileAppender.DatePattern = appenderSection.GetValue<string>("DatePattern");
+                    rollingFileAppender.StaticLogFileName = appenderSection.GetValue<bool>("StaticLogFileName");
+                    rollingFileAppender.AppendToFile = appenderSection.GetValue<bool>("AppendToFile");
+                    rollingFileAppender.RollingStyle = (RollingFileAppender.RollingMode)Enum.Parse(typeof(RollingFileAppender.RollingMode), appenderSection.GetValue<string>("RollingStyle"));
+                    rollingFileAppender.MaxSizeRollBackups = appenderSection.GetValue<int>("MaxSizeRollBackups");
+                    rollingFileAppender.MaximumFileSize = appenderSection.GetValue<string>("MaximumFileSize");
+
+                    Type? layoutType = Type.GetType(appenderSection.GetSection("Layout").GetValue<string>("Type"));
+                    if (layoutType != null)
+                    {
+                        SerializedLayout? layout = (SerializedLayout)Activator.CreateInstance(layoutType);
+                        Type? decoratorType = Type.GetType(appenderSection.GetSection("Layout:Decorator").GetValue<string>("Type"));
+                        if (decoratorType != null)
+                        {
+                            log4net.Layout.Decorators.StandardTypesDecorator? decorator = (log4net.Layout.Decorators.StandardTypesDecorator)Activator.CreateInstance(decoratorType);
+                            layout.AddDecorator(decorator);
+                        }
+                        layout.ActivateOptions();
+                        rollingFileAppender.Layout = layout;
+                    }
+
+                    rollingFileAppender.ActivateOptions();
+                }
+
+                hierarchy.Root.AddAppender(appender);
+            }
+
+            hierarchy.Configured = true;
+
+            // Log to console that configuration was completed
+            ILog logger = LogManager.GetLogger(typeof(Program));
+            logger.Info("Log4Net configured successfully.");
+        }
+
+
         /// <summary>
         /// ConfigureCors
         /// </summary>
