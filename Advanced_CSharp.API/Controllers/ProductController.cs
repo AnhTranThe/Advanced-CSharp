@@ -42,7 +42,8 @@ namespace Advanced_CSharp.API.Controllers
             {
 
                 ProductGetListResponse response = await _productService.GetAllAsync(request);
-
+                Console.WriteLine(response.TotalProduct.ToString());
+                _loggingService.LogInfo(response.TotalProduct.ToString());
                 return response.BaseResponse.Success ? new JsonResult(response) : BadRequest(response.BaseResponse.Message);
 
             }
